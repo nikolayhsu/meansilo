@@ -49,7 +49,19 @@ app.use(function (req, res, next) {
 		res.end();
 		
 	} else {
-	
+		
+		// redirect if we land at the root
+
+		if ( req.originalUrl === '/' ) {
+		
+			if (isLoggedIn) {
+				res.redirect('/user');
+			} else {
+				res.redirect('/login');
+			}
+		
+		}
+
 		req.session.cookie.expires = new Date(Date.now() + hour);
 		req.session.cookie.maxAge = hour;
 
@@ -64,8 +76,8 @@ app.use(function (req, res, next) {
 		}
 		
 		// privte pages will override public, if we are logged in
-		
-		if (isLoggedIn && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
+
+		if ( && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
 		
 			app.engine('html', require('ejs').renderFile);
 			res.render(req.originalUrl.slice( 1 ) + '.html' , {
