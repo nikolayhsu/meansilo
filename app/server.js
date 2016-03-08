@@ -13,6 +13,7 @@ var ObjectId = require('mongodb').ObjectID;
 var appPort = 8888;
 var adminUserObj = { "username" : "admin" , "password" : "password" };
 var md5sum = crypto.createHash('md5');
+var bodyParser = require('body-parser');
 
 // customjs
 
@@ -31,6 +32,8 @@ app.use(session({
 }));
 
 app.use(express.static(__dirname + "/app/public"));
+
+app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
 	

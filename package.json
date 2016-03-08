@@ -36,7 +36,8 @@
     "mongojs": "~2.3.0",
     "fs": "~0.0.2",
     "ejs": "~2.4.1",
-    "crypto": "~0.0.3"
+    "crypto": "~0.0.3",
+    "body-parser": "~1.15.0"
   },
   "devDependencies": {},
   "bugs": {
