@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
 	
-	var renderPublicPages = ['/index','/login']
+	var renderPublicPages = ['/index']
 		, renderPrivatePages = ['/user']
 		, hour = 3600000
 		, validHosts = ['localhost','127.0.0.1']
