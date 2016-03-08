@@ -10,6 +10,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var ObjectId = require('mongodb').ObjectID;
+var appPort = 8888;
+var adminUserObj = { "user" : "admin" , "pass" : hash("password") };
 
 // customjs
 
@@ -147,9 +149,14 @@ app.post('/logout' , function(req , res) {
 
 });
 
-app.listen(8888);
+app.listen(appPort);
 
-console.log('Node.JS Server Started (express!)');
+// check if admin user has been created
+
+db.collection('users').update(adminUserObj, adminUserObj , true);
+
+
+console.log('Node.JS Server Started (express!) running on port: ' + appPort);
 
 var backgroundProcess = setInterval(function() {
   
