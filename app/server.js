@@ -35,9 +35,11 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
 	
-	var renderPages = ['/index']
+	var renderPublicPages = ['/index','/login']
+		, renderPrivatePages = ['/user']
 		, hour = 3600000
-		, validHosts = ['localhost','127.0.0.1'];
+		, validHosts = ['localhost','127.0.0.1']
+		, isLoggedIn = (req.session.username !== undefined);
 	
 	// only allow connections from valid hosts.
 	
@@ -55,35 +57,33 @@ app.use(function (req, res, next) {
 
 		app.use(express.static(__dirname + "/public"));
 		
-		if (req.session.username === undefined) {
+		if (isLoggedIn) {
 		
-			if (renderPages.indexOf(req.originalUrl) >= 0) {
-				app.engine('html', require('ejs').renderFile);
-				res.render(req.originalUrl.slice( 1 ) + '.html' , {
-					jsFile : __dirname + '/public/controllers' + req.originalUrl + '.js'
-					, activePage : req.originalUrl.slice( 1 )
-				});
-			}
+			app.use(express.static(__dirname + "/private"));
 
-			next();
-			
-		} else {
+		}
 		
-			// we are logged in, so we can look in private for static files.
-			
-			if (renderPages.indexOf(req.originalUrl) >= 0) {
-				app.engine('html', require('ejs').renderFile);
-				res.render(req.originalUrl.slice( 1 ) + '.html' , {
-					jsFile : __dirname + '/private/controllers' + req.originalUrl + '.js'
-					, activePage : req.originalUrl.slice( 1 )
-				});
-			} else {
-				app.use(express.static(__dirname + "/private"));
-			}
-			
-			next();
+		// privte pages will override public, if we are logged in
+		
+		if (isLoggedIn && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
+		
+			app.engine('html', require('ejs').renderFile);
+			res.render(req.originalUrl.slice( 1 ) + '.html' , {
+				jsFile : __dirname + '/private/controllers' + req.originalUrl + '.js'
+				, activePage : req.originalUrl.slice( 1 )
+			});
+		
+		} else if (renderPublicPages.indexOf(req.originalUrl) >= 0) {
+		
+			app.engine('html', require('ejs').renderFile);
+			res.render(req.originalUrl.slice( 1 ) + '.html' , {
+				jsFile : __dirname + '/public/controllers' + req.originalUrl + '.js'
+				, activePage : req.originalUrl.slice( 1 )
+			});
 		
 		}
+			
+		next();
 	
 	}
 	
