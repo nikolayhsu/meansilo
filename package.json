@@ -3,6 +3,9 @@
 	, "description": "Boilerplate MEAN app with login"
 	, "version": "0.0.1"
 	, "bin": "./" 
+	, "url": "https://github.com/buzzcloudau/meansilo"
+	, "email": "ricardo.russon@gmail.com"
+	, "license": "MIT"
 	},
 	"engines": {
 	    "node": ">=0.12.0",

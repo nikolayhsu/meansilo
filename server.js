@@ -27,7 +27,7 @@ app.use(session({
 	})
 }));
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/app/public"));
 
 app.use(function (req, res, next) {
 	
@@ -71,7 +71,7 @@ app.use(function (req, res, next) {
 					, activePage : req.originalUrl.slice( 1 )
 				});
 			} else {
-				app.use(express.static(__dirname + "/private"));
+				app.use(express.static(__dirname + "/app/private"));
 			}
 			
 			next();
@@ -117,7 +117,7 @@ app.post('/login' , function(req , res) {
 
 app.get('/login', function(req , res) {
 
-	fs.readFile('./public/login.html', function(error, content) {
+	fs.readFile('./app/public/login.html', function(error, content) {
 		if (error) {
 			res.writeHead(500);
 			res.end();
