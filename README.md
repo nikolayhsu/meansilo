@@ -8,4 +8,4 @@ Install the project
 
 Start 'er up
 
-    sudo ./runh.sh
+    sudo ./run.sh
