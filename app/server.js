@@ -11,7 +11,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var ObjectId = require('mongodb').ObjectID;
 var appPort = 8888;
-var adminUserObj = { "user" : "admin" , "pass" : "password" };
+var adminUserObj = { "username" : "admin" , "password" : "password" };
 var md5sum = crypto.createHash('md5');
 
 // customjs
@@ -70,7 +70,7 @@ app.use(function (req, res, next) {
 			if (renderPages.indexOf(req.originalUrl) >= 0) {
 				app.engine('html', require('ejs').renderFile);
 				res.render(req.originalUrl.slice( 1 ) + '.html' , {
-					jsFile : '/controllers' + req.originalUrl + '.js'
+					jsFile : '/app/controllers' + req.originalUrl + '.js'
 					, activePage : req.originalUrl.slice( 1 )
 				});
 			} else {
