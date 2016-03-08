@@ -2,7 +2,7 @@
 
 var express = require('express');
 var app = express();
-
+var crypto = require('crypto');
 var mongojs = require('mongojs');
 var db = mongojs('myApp', ['myApp']);
 var fs = require('fs');
@@ -11,7 +11,8 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var ObjectId = require('mongodb').ObjectID;
 var appPort = 8888;
-var adminUserObj = { "user" : "admin" , "pass" : hash("password") };
+var adminUserObj = { "user" : "admin" , "pass" : "password" };
+var md5sum = crypto.createHash('md5');
 
 // customjs
 
