@@ -1,33 +1,54 @@
-{ 
-	"name": "meansilo"
-	, "description": "Boilerplate MEAN app with login"
-	, "version": "0.0.1"
-	, "bin": "./" 
-	, "url": "https://github.com/buzzcloudau/meansilo"
-	, "email": "ricardo.russon@gmail.com"
-	, "license": "MIT"
-	},
-	"engines": {
-	    "node": ">=0.12.0",
-	    "npm": ">=2.0.0"
-	},
-	"scripts": {
-	    "start": "server",
-	    "test": "server test"
-	},
-	"dependencies": {
-	    "body-parser": "~1.15.0",
-	    "connect-mongo": "~0.8.2",
-	    "cookie-parser": "~1.4.1",
-	    "express": "~4.13.4",
-	    "express-session": "~1.13.0",
-	    "forever": "~0.15.1",
-	    "generate-password": "~1.1.1",
-	    "mongodb":"~2.1.7",
-		"mongojs":"~2.3.0",
-		"fs":"~0.0.2"
-	},
-	"devDependencies": {
-	    
-	}
+{
+  "name": "meansilo",
+  "description": "Boilerplate MEAN app with login",
+  "version": "0.0.19",
+  "url": "https://github.com/buzzcloudau/meansilo",
+  "email": "ricardo.russon@gmail.com",
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.12.0",
+    "npm": ">=2.0.0"
+  },
+  "files": [
+    "./app/",
+    "./data/empty.txt",
+    "./logs/empty.log",
+    "./run.sh",
+    "./package.json",
+    "./server.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buzzcloudau/meansilo.git"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.0",
+    "connect-mongo": "~0.8.2",
+    "cookie-parser": "~1.4.1",
+    "express": "~4.13.4",
+    "express-session": "~1.13.0",
+    "forever": "~0.15.1",
+    "generate-password": "~1.1.1",
+    "mongodb": "~2.1.7",
+    "mongojs": "~2.3.0",
+    "fs": "~0.0.2",
+    "ejs": "~2.4.1"
+  },
+  "devDependencies": {},
+  "bugs": {
+    "url": "https://github.com/buzzcloudau/meansilo/issues"
+  },
+  "homepage": "https://github.com/buzzcloudau/meansilo#readme",
+  "main": "server.js",
+  "keywords": [
+    "MEAN",
+    "Stack",
+    "Boostrap",
+    "Template",
+    "Boilerplate"
+  ],
+  "author": "Ricardo Russon"
 }
