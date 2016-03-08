@@ -31,8 +31,6 @@ app.use(session({
 	})
 }));
 
-app.use(express.static(__dirname + "/app/public"));
-
 app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
@@ -55,17 +53,20 @@ app.use(function (req, res, next) {
 		
 		if (req.session.username === undefined) {
 		
-			if( req.originalUrl !== '/login' && req.originalUrl.indexOf('/download/') !== 0 !== 0 && req.originalUrl.indexOf('/images/') !== 0) {
-				res.redirect('/login');
-				res.end();
-			} else {
-				next();
-			}
+			// we are logged in, so we can look in private for static files.
 			
-		} else if ( req.originalUrl === '/' ) {
-		
-			res.redirect('/home');
-		
+			if (renderPages.indexOf(req.originalUrl) >= 0) {
+				app.engine('html', require('ejs').renderFile);
+				res.render(req.originalUrl.slice( 1 ) + '.html' , {
+					jsFile : __dirname + '/public/controllers' + req.originalUrl + '.js'
+					, activePage : req.originalUrl.slice( 1 )
+				});
+			} else {
+				app.use(express.static(__dirname + "/public"));
+			}
+
+			next();
+			
 		} else {
 		
 			// we are logged in, so we can look in private for static files.
@@ -73,11 +74,11 @@ app.use(function (req, res, next) {
 			if (renderPages.indexOf(req.originalUrl) >= 0) {
 				app.engine('html', require('ejs').renderFile);
 				res.render(req.originalUrl.slice( 1 ) + '.html' , {
-					jsFile : '/app/controllers' + req.originalUrl + '.js'
+					jsFile : __dirname + '/private/controllers' + req.originalUrl + '.js'
 					, activePage : req.originalUrl.slice( 1 )
 				});
 			} else {
-				app.use(express.static(__dirname + "/app/private"));
+				app.use(express.static(__dirname + "/private"));
 			}
 			
 			next();
