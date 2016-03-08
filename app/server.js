@@ -93,6 +93,18 @@ app.use(function (req, res, next) {
 				, activePage : req.originalUrl.slice( 1 )
 			});
 		
+		} else {
+
+			fs.readFile('./app/public/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
+				if (error) {
+					res.writeHead(500);
+					res.end();
+				}
+				else {
+					res.writeHead(200, { 'Content-Type': 'text/html' });
+					res.end(content, 'UTF-8');
+				}
+			});
 		}
 			
 		next();
@@ -131,21 +143,6 @@ app.post('/login' , function(req , res) {
 		res.json({logedin: false});
 	
 	}
-
-});
-
-app.get('/login', function(req , res) {
-
-	fs.readFile('./app/public/login.html', function(error, content) {
-		if (error) {
-			res.writeHead(500);
-			res.end();
-		}
-		else {
-			res.writeHead(200, { 'Content-Type': 'text/html' });
-			res.end(content, 'UTF-8');
-		}
-	});
 
 });
 
