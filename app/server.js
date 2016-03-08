@@ -77,7 +77,7 @@ app.use(function (req, res, next) {
 		
 		// privte pages will override public, if we are logged in
 
-		if ( && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
+		if (isLoggedIn && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
 		
 			app.engine('html', require('ejs').renderFile);
 			res.render(req.originalUrl.slice( 1 ) + '.html' , {
