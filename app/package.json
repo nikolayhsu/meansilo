@@ -1,0 +1,30 @@
+{ 
+	"name": "meansilo"
+	, "description": "Boilerplate MEAN app with login"
+	, "version": "0.0.1"
+	, "bin": "./" 
+	},
+	"engines": {
+	    "node": ">=0.12.0",
+	    "npm": ">=2.0.0"
+	},
+	"scripts": {
+	    "start": "server",
+	    "test": "server test"
+	},
+	"dependencies": {
+	    "body-parser": "~1.15.0",
+	    "connect-mongo": "~0.8.2",
+	    "cookie-parser": "~1.4.1",
+	    "express": "~4.13.4",
+	    "express-session": "~1.13.0",
+	    "forever": "~0.15.1",
+	    "generate-password": "~1.1.1",
+	    "mongodb":"~2.1.7",
+		"mongojs":"~2.3.0",
+		"fs":"~0.0.2"
+	},
+	"devDependencies": {
+	    
+	}
+}

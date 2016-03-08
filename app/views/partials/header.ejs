@@ -1,0 +1,49 @@
+<!DOCTYPE>
+<html ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>My App</title>
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="/css/styles.css">
+    
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+
+  </head>
+
+  <body class="pageBody">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">My App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navitem <% if ( activePage == 'search' ) { %>active<% } %>"><a href="/search"><i class="fa fa-search"></i> <span>Search</span></a></li>
+            <li class="navitem <% if ( activePage == 'results' ) { %>active<% } %>"><a href="/results"><i class="fa fa-list"></i> <span>Results</span></a></li>
+            <!--
+			<li class="navitem"><a href="#favourites"><i class="fa fa-star"></i></a></li>
+            <li class="navitem"><a href="#notifications"><i class="fa fa-exclamation-triangle"></i></a></li>
+            <li class="navitem"><a href="#settings"><i class="fa fa-cog"></i></a></li>
+			-->
+            <li class="navitem"><a href="/logout"><i class="fa fa-sign-out"></i> <span>Logout</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="page">
