@@ -152,9 +152,9 @@ app.post('/logout' , function(req , res) {
 
 app.listen(appPort);
 
-// check if admin user has been created
+// Insert the admin, or reset its password
 
-db.collection('users').update(adminUserObj, adminUserObj , true);
+db.collection('users').update(adminUserObj, adminUserObj , { upsert: true } );
 
 
 console.log('Node.JS Server Started (express!) running on port: ' + appPort);
