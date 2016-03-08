@@ -50,19 +50,19 @@ app.use(function (req, res, next) {
 	
 		req.session.cookie.expires = new Date(Date.now() + hour);
 		req.session.cookie.maxAge = hour;
+
+		// make public static files available
+
+		app.use(express.static(__dirname + "/public"));
 		
 		if (req.session.username === undefined) {
 		
-			// we are logged in, so we can look in private for static files.
-			
 			if (renderPages.indexOf(req.originalUrl) >= 0) {
 				app.engine('html', require('ejs').renderFile);
 				res.render(req.originalUrl.slice( 1 ) + '.html' , {
 					jsFile : __dirname + '/public/controllers' + req.originalUrl + '.js'
 					, activePage : req.originalUrl.slice( 1 )
 				});
-			} else {
-				app.use(express.static(__dirname + "/public"));
 			}
 
 			next();
