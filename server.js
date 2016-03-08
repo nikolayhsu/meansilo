@@ -156,7 +156,7 @@ app.listen(appPort);
 db.collection('users').update(adminUserObj, adminUserObj , true);
 
 
-console.log('Node.JS Server Started (express!) running on port' + appPort);
+console.log('Node.JS Server Started (express!) running on port: ' + appPort);
 
 var backgroundProcess = setInterval(function() {
   
