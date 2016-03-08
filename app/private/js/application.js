@@ -1,7 +1,5 @@
-// application.js
+// application.js (private)
 
 $(function(){
-
-	
 
 });

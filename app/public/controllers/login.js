@@ -1,6 +1,6 @@
-var pmApp = angular.module( "pmApp" , [] );
+var myApp = angular.module( "myApp" , [] );
 
-pmApp.controller('loginController' , ['$scope','$http',function($scope , $http){
+myApp.controller('loginController' , ['$scope','$http',function($scope , $http){
 
 	$scope.userLogin = function() {
 	
@@ -24,7 +24,7 @@ pmApp.controller('loginController' , ['$scope','$http',function($scope , $http){
 	
 }]);
 
-pmApp.directive('pmEnter', function () {
+myApp.directive('pmEnter', function () {
     return function ($scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {

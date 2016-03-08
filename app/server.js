@@ -33,6 +33,8 @@ app.use(session({
 
 app.use(bodyParser.json());
 
+app.use(express.static(__dirname + "/public"));
+
 app.use(function (req, res, next) {
 	
 	var renderPublicPages = ['/index']
@@ -93,17 +95,52 @@ app.use(function (req, res, next) {
 				, activePage : req.originalUrl.slice( 1 )
 			});
 		
+		} else if (isLoggedIn) {
+
+			fs.readFile('./app/private/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
+				
+				if (error) {
+					
+					fs.readFile('./app/public/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
+						
+						if (error) {
+							
+							console.log(error);
+
+							res.writeHead(500);
+							res.end();
+						
+						} else {
+						
+							res.end(content, 'UTF-8');
+						
+						}
+					});
+				
+				} else {
+
+					res.end(content, 'UTF-8');
+
+				}
+			});
+		
 		} else {
 
 			fs.readFile('./app/public/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
+				
 				if (error) {
+				
+					console.log(error);
+
 					res.writeHead(500);
 					res.end();
-				}
-				else {
-					res.writeHead(200, { 'Content-Type': 'text/html' });
+				
+				} else {
+				
 					res.end(content, 'UTF-8');
+				
 				}
+
 			});
 		}
 			
