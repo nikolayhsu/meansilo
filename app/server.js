@@ -64,15 +64,15 @@ app.use(function (req, res, next) {
 
 	var isLoggedIn = (req.session.username !== undefined);
 
-	// if we are logged in, prefer static files in the admin folder
-
-	if (isLoggedIn) {
-		req.app.use(express.static(__dirname + "/admin"));
-	}
-
 	// look in the public folder for static files
 
 	req.app.use(express.static(__dirname + "/public"));
+
+	// if we are logged in, prefer static files in the admin folder
+
+	if (isLoggedIn) {
+		req.app.use("/admin" , express.static(__dirname + "/admin"));
+	}
 
 	if (req.originalUrl == "/" && !isLoggedIn) {
 		res.redirect("/home");
