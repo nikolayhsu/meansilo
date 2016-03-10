@@ -8,7 +8,7 @@ myApp.controller('loginController' , ['$scope','$http',function($scope , $http){
 	
 			if ( response.logedin !== undefined && response.logedin == true ) {
 		
-				window.location.href = '/';
+				window.location.href = '/admin/home';
 		
 			} else {
 		

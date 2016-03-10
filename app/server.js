@@ -74,10 +74,8 @@ app.use(function (req, res, next) {
 		req.app.use("/admin" , express.static(__dirname + "/admin"));
 	}
 
-	if (req.originalUrl == "/" && !isLoggedIn) {
+	if (req.originalUrl == "/") {
 		res.redirect("/home");
-	} else if (req.originalUrl == "/") {
-		res.redirect("/admin/home");
 	}
 
 	next();
@@ -87,11 +85,16 @@ app.use(function (req, res, next) {
 app.get(['/:name','/:dir/:name'], function (req, res, next) {
 
 	var fileNameSplit = req.params.name.split('.');
-	var fileName = req.params.name + ".html";
+	var fileName = ( req.params.name !== undefined ? req.params.name : "home" ) + ".html";
 	var dirName = req.params.dir !== undefined ? req.params.dir : "public";
 	var isLoggedIn = (req.session.username !== undefined);
 	
-	if (req.params.name === "logout") {
+	if (( req.params.name === "login" && isLoggedIn) || req.params.name === "admin" ) {
+
+		res.redirect('/admin/home');
+		res.end();
+
+	} else if (req.params.name === "logout") {
 	
 		req.session.destroy();
 		res.redirect('/login');
