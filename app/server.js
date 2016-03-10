@@ -14,6 +14,7 @@ var md5sum = crypto.createHash('md5');
 var bodyParser = require('body-parser');
 
 // App Settings
+var appName = "My New App"
 var adminUsername = "admin";
 var adminPassword = "password";
 var appHostname = "localhost";
@@ -106,14 +107,12 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 
 		if (fileNameSplit.length === 1) { 
 
-			fs.readFile(__dirname + '/' + dirName + '/' + fileName, function(error, content) {
-				if (error) {
-					res.writeHead(500);
-					res.end(error.toString(), 'UTF-8');
-				} else {
-					res.writeHead(200, { 'Content-Type': 'text/html' });
-					res.end(content, 'UTF-8');
-				}
+			res.render(__dirname + '/' + dirName + '/' + fileName , {
+				jsFile : '/controllers/' + req.params.name + '.js'
+				, dirname : __dirname
+				, loggedIn : isLoggedIn
+				, username : req.session.username
+				, appName : appName
 			});
 
 		} else if (fileNameSplit.length > 1 && fileNameSplit[1] === "html") {
