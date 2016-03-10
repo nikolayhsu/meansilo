@@ -113,6 +113,7 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 				, loggedIn : isLoggedIn
 				, username : req.session.username
 				, appName : appName
+				, path : '/' + dirName + '/' + req.params.name
 			});
 
 		} else if (fileNameSplit.length > 1 && fileNameSplit[1] === "html") {
