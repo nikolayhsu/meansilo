@@ -51,7 +51,7 @@ app.use("/admin", function(req, res, next){
 	
 	if (req.session.username === undefined) {
 		res.writeHead(401);
-		res.end('Unauthorized', 'UTF-8');
+		res.end('401: Unauthorized', 'UTF-8');
 	} else {
 		app.use(express.static(__dirname + "/admin"));
 	}
@@ -68,7 +68,7 @@ app.use(function (req, res, next) {
 
 	req.app.use(express.static(__dirname + "/public"));
 
-	// if we are logged in, prefer static files in the admin folder
+	// if we are logged in, allow static files in the admin folder
 
 	if (isLoggedIn) {
 		req.app.use("/admin" , express.static(__dirname + "/admin"));
@@ -177,6 +177,6 @@ console.log('Node.JS Server Started (express!) running on port: ' + appPort);
 
 var backgroundProcess = setInterval(function() {
   
-	console.log('backgroundProcess');
+	// console.log('backgroundProcess');
 	
 }, 10000);
