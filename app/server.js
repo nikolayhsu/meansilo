@@ -10,12 +10,16 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var ObjectId = require('mongodb').ObjectID;
-var appPort = 8888;
-var adminUserObj = { "username" : "admin" , "password" : "password" };
 var md5sum = crypto.createHash('md5');
 var bodyParser = require('body-parser');
 
-// customjs
+// App Settings
+var adminUsername = "admin";
+var adminPassword = "password";
+var appHostname = "localhost";
+var appPort = 8888;
+var mongoHostname = "localhost";
+var mongoPort = 27017;
 
 app.use(session({
 	secret: '34680346e41c11e597309a79f06e9478',
@@ -24,130 +28,114 @@ app.use(session({
     rolling: true,
     maxAge: 60000,
 	store: new MongoStore({
-		url: 'mongodb://localhost/',
+		url: 'mongodb://'+mongoHostname+'/',
 		db: 'myApp',
-		host: 'localhost',
-		port: 27017
+		host: mongoHostname,
+		port: mongoPort
 	})
 }));
 
+// Insert the admin, or reset its password
+
+db.collection('users').update({ "username" : adminUsername }
+							, { "username" : adminUsername , "password" : adminPassword }
+							, { upsert: true } 
+							);
+
+
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + "/public"));
+app.engine('html', require('ejs').renderFile);
+
+app.use("/admin", function(req, res, next){
+	
+	if (req.session.username === undefined) {
+		res.writeHead(401);
+		res.end('Unauthorized', 'UTF-8');
+	} else {
+		app.use(express.static(__dirname + "/admin"));
+	}
+
+	next();
+
+});
 
 app.use(function (req, res, next) {
-	
-	var renderPublicPages = ['/index']
-		, renderPrivatePages = ['/user']
-		, hour = 3600000
-		, validHosts = ['localhost','127.0.0.1']
-		, isLoggedIn = (req.session.username !== undefined);
-	
-	// only allow connections from valid hosts.
-	
-	if ( validHosts.indexOf(req.headers.host.split(':')[0]) < 0 ) {
-		
-		res.status(404);
-		res.end();
-		
-	} else {
-		
-		// redirect if we land at the root
 
-		if ( req.originalUrl === '/' ) {
-		
-			if (isLoggedIn) {
-				res.redirect('/user');
-			} else {
-				res.redirect('/login');
-			}
-		
-		}
+	var isLoggedIn = (req.session.username !== undefined);
 
-		req.session.cookie.expires = new Date(Date.now() + hour);
-		req.session.cookie.maxAge = hour;
+	// if we are logged in, prefer static files in the admin folder
 
-		// make public static files available
-
-		app.use(express.static(__dirname + "/public"));
-		
-		if (isLoggedIn) {
-		
-			app.use(express.static(__dirname + "/private"));
-
-		}
-		
-		// privte pages will override public, if we are logged in
-
-		if (isLoggedIn && renderPrivatePages.indexOf(req.originalUrl) >= 0) {
-		
-			app.engine('html', require('ejs').renderFile);
-			res.render(req.originalUrl.slice( 1 ) + '.html' , {
-				jsFile : __dirname + '/private/controllers' + req.originalUrl + '.js'
-				, activePage : req.originalUrl.slice( 1 )
-			});
-		
-		} else if (renderPublicPages.indexOf(req.originalUrl) >= 0) {
-		
-			app.engine('html', require('ejs').renderFile);
-			res.render(req.originalUrl.slice( 1 ) + '.html' , {
-				jsFile : __dirname + '/public/controllers' + req.originalUrl + '.js'
-				, activePage : req.originalUrl.slice( 1 )
-			});
-		
-		} else if (isLoggedIn) {
-
-			fs.readFile('./app/private/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
-				
-				if (error) {
-					
-					fs.readFile('./app/public/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
-						
-						if (error) {
-							
-							console.log(error);
-
-							res.writeHead(500);
-							res.end();
-						
-						} else {
-						
-							res.end(content, 'UTF-8');
-						
-						}
-					});
-				
-				} else {
-
-					res.end(content, 'UTF-8');
-
-				}
-			});
-		
-		} else {
-
-			fs.readFile('./app/public/' + req.originalUrl.slice( 1 ) + '.html', function(error, content) {
-				
-				if (error) {
-				
-					console.log(error);
-
-					res.writeHead(500);
-					res.end();
-				
-				} else {
-				
-					res.end(content, 'UTF-8');
-				
-				}
-
-			});
-		}
-			
-		next();
-	
+	if (isLoggedIn) {
+		req.app.use(express.static(__dirname + "/admin"));
 	}
+
+	// look in the public folder for static files
+
+	req.app.use(express.static(__dirname + "/public"));
+
+	if (req.originalUrl == "/" && !isLoggedIn) {
+		res.redirect("/home");
+	} else if (req.originalUrl == "/") {
+		res.redirect("/admin/home");
+	}
+
+	next();
 	
+});
+
+app.get(['/:name','/:dir/:name'], function (req, res, next) {
+
+	var fileNameSplit = req.params.name.split('.');
+	var fileName = req.params.name + ".html";
+	var dirName = req.params.dir !== undefined ? req.params.dir : "public";
+	var isLoggedIn = (req.session.username !== undefined);
+	
+	if (req.params.name === "logout") {
+	
+		req.session.destroy();
+		res.redirect('/login');
+		res.end();
+	
+	} else {
+
+		// we are only converting pretty URLs to .html
+
+		if (fileNameSplit.length === 1) { 
+
+			fs.readFile(__dirname + '/' + dirName + '/' + fileName, function(error, content) {
+				if (error) {
+					res.writeHead(500);
+					res.end(error.toString(), 'UTF-8');
+				} else {
+					res.writeHead(200, { 'Content-Type': 'text/html' });
+					res.end(content, 'UTF-8');
+				}
+			});
+
+		} else if (fileNameSplit.length > 1 && fileNameSplit[1] === "html") {
+			
+			// redirect .html to pretty urls
+
+			if (dirName !== undefined && dirName !== "public") {
+
+				res.redirect("/" + dirName + "/" + fileNameSplit[0]);
+
+			} else {
+
+				res.redirect(301, "/" + fileNameSplit[0]);
+
+			}
+
+		} else {
+			
+			// move on to deliver static files
+			next();
+
+		}
+
+	}
+
 });
 
 app.post('/login' , function(req , res) {
@@ -183,29 +171,7 @@ app.post('/login' , function(req , res) {
 
 });
 
-app.get('/logout' , function(req , res) {
-	
-	req.session.destroy();
-
-	res.redirect('/login');
-	res.end();
-
-});
-
-app.post('/logout' , function(req , res) {
-
-	req.session.destroy();
-
-	res.json({logout: true});
-
-});
-
-app.listen(appPort);
-
-// Insert the admin, or reset its password
-
-db.collection('users').update(adminUserObj, adminUserObj , { upsert: true } );
-
+app.listen(appPort, appHostname);
 
 console.log('Node.JS Server Started (express!) running on port: ' + appPort);
 
