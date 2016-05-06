@@ -55,13 +55,21 @@ app.engine('html', require('ejs').renderFile);
 app.use("/admin", function(req, res, next){
 	
 	if (req.session.username === undefined) {
-		res.writeHead(401);
-		res.end('401: Unauthorized', 'UTF-8');
+		
+		var fileNameParts = req.originalUrl.split('/');
+		var fileName = fileNameParts[fileNameParts.length - 1];
+
+		if (fileName.indexOf(".") > 1) { 
+			res.writeHead(401);
+			res.end('401: Unauthorized', 'UTF-8');
+		} else {
+			res.redirect('/login');
+		}
+
 	} else {
 		app.use(express.static(__dirname + "/admin"));
+		next();
 	}
-
-	next();
 
 });
 
