@@ -1,19 +1,7 @@
 "use strict";
 
-var express = require('express');
-var app = express();
-var crypto = require('crypto');
-var mongojs = require('mongojs');
-var db = mongojs('myApp', ['myApp']);
-var fs = require('fs');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var ObjectId = require('mongodb').ObjectID;
-var md5sum = crypto.createHash('md5');
-var bodyParser = require('body-parser');
-
 // App Settings
+
 var appName = "My New App"
 var adminUsername = "admin";
 var adminPassword = "password";
@@ -21,6 +9,22 @@ var appHostname = "localhost";
 var appPort = 8888;
 var mongoHostname = "localhost";
 var mongoPort = 27017;
+var mongoDBName = "meansilodb";
+
+// Modules
+
+var express = require('express');
+var app = express();
+var crypto = require('crypto');
+var mongojs = require('mongojs');
+var db = mongojs(mongoDBName, ['mycollection']);
+var fs = require('fs');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var ObjectId = require('mongodb').ObjectID;
+var md5sum = crypto.createHash('md5');
+var bodyParser = require('body-parser');
 
 app.use(session({
 	secret: '34680346e41c11e597309a79f06e9478',
@@ -30,7 +34,7 @@ app.use(session({
     maxAge: 60000,
 	store: new MongoStore({
 		url: 'mongodb://'+mongoHostname+'/',
-		db: 'myApp',
+		db: mongoDBName,
 		host: mongoHostname,
 		port: mongoPort
 	})

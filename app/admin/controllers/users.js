@@ -1,3 +1,3 @@
 // users.js
 
-var myApp = angular.module( "myApp" , [] );
+var meansilo = angular.module( "meansilo" , [] );

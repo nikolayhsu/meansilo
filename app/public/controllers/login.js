@@ -1,6 +1,6 @@
-var myApp = angular.module( "myApp" , [] );
+var meansilo = angular.module( "meansilo" , [] );
 
-myApp.controller('loginController' , ['$scope','$http',function($scope , $http){
+meansilo.controller('loginController' , ['$scope','$http',function($scope , $http){
 
 	$scope.userLogin = function() {
 	
@@ -24,7 +24,7 @@ myApp.controller('loginController' , ['$scope','$http',function($scope , $http){
 	
 }]);
 
-myApp.directive('pmEnter', function () {
+meansilo.directive('pmEnter', function () {
     return function ($scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {

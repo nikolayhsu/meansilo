@@ -1,6 +1,6 @@
-var myApp = angular.module( "myApp" , [] );
+var meansilo = angular.module( "meansilo" , [] );
 
-myApp.controller('contactController' , ['$scope','$http',function($scope , $http){
+meansilo.controller('contactController' , ['$scope','$http',function($scope , $http){
 
 	
 	
