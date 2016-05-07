@@ -36,7 +36,9 @@
             <li class="<% if (path == "/public/about") { %>active<% } %>"><a href="/about">About</a></li>
             <li class="<% if (path == "/public/contact") { %>active<% } %>"><a href="/contact">Contact</a></li>
             <li class="<% if (path == "/admin/home") { %>active<% } %>"><a href="/admin/home">Admin</a></li>
+            <% if (userlevel == 1) { %>
             <li class="<% if (path == "/admin/users") { %>active<% } %>"><a href="/admin/users">Users</a></li>
+            <% } %>
           </ul>
 
           <ul class="nav navbar-nav navbar-right">

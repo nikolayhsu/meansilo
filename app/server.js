@@ -10,6 +10,7 @@ var appPort = 8888;
 var mongoHostname = "localhost";
 var mongoPort = 27017;
 var mongoDBName = "meansilodb";
+var mongoSecret = "34680346e41c11e597309a79f06e9478";
 
 // Modules
 
@@ -27,7 +28,7 @@ var md5sum = crypto.createHash('md5');
 var bodyParser = require('body-parser');
 
 app.use(session({
-	secret: '34680346e41c11e597309a79f06e9478',
+	secret: mongoSecret,
 	resave: true,
     saveUninitialized: true,
     rolling: true,
@@ -43,7 +44,7 @@ app.use(session({
 // Insert the admin, or reset its password
 
 db.collection('users').update({ "username" : adminUsername }
-							, { "username" : adminUsername , "password" : adminPassword }
+							, { "username" : adminUsername , "password" : adminPassword , "userlevel" : 1 }
 							, { upsert: true } 
 							);
 
@@ -102,7 +103,12 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 	var dirName = req.params.dir !== undefined ? req.params.dir : "public";
 	var isLoggedIn = (req.session.username !== undefined);
 	
-	if (( req.params.name === "login" && isLoggedIn) || req.params.name === "admin" ) {
+	if ( dirName === "admin" && req.params.name === "users" && req.session.userlevel > 2 ) {
+
+		res.writeHead(401);
+		res.end('401: Unauthorized', 'UTF-8');
+
+	} else if (( req.params.name === "login" && isLoggedIn) || req.params.name === "admin" ) {
 
 		res.redirect('/admin/home');
 		res.end();
@@ -124,6 +130,7 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 				, dirname : __dirname
 				, loggedIn : isLoggedIn
 				, username : req.session.username
+				, userlevel : req.session.userlevel
 				, appName : appName
 				, path : '/' + dirName + '/' + req.params.name
 			});
