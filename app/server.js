@@ -26,6 +26,7 @@ var MongoStore = require('connect-mongo')(session);
 var ObjectId = require('mongodb').ObjectID;
 var md5sum = crypto.createHash('md5');
 var bodyParser = require('body-parser');
+var path_module = require('path');
 
 app.use(session({
 	secret: mongoSecret,
@@ -160,38 +161,17 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 
 });
 
-app.post('/login' , function(req , res) {
-	
-	if (req.body.username !== undefined && req.body.password !== undefined) {
-	
-		db.collection('users').findOne(req.body , function(err , user){
-		
-			if (err) {
-			
-				console.log(err);
-			
-			} else if ( user !== null ) {
-			
-				req.session._id = user._id;
-				req.session.username = user.username;
-				
-				res.json({logedin: true});
-		
-			} else {
-		
-				res.json({logedin: false});
-		
-			}
-			
-		});
-	
-	} else {
-	
-		res.json({logedin: false});
-	
-	}
+// Dynamic Module Loding ( Look maa, no config )
 
-});
+function loadModules(path) {
+    fs.lstat(path, function(err, stat) {
+        if (!stat.isDirectory()) {
+            require(path)(app, db);
+        }
+    });
+}
+loadModules(path_module.join(__dirname, 'public' , 'modules'));
+loadModules(path_module.join(__dirname, 'admin' , 'modules'));
 
 app.listen(appPort, appHostname);
 
