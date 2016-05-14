@@ -51,7 +51,7 @@ db.collection('users').find({ "username" : adminUsername },function(err , user){
 			console.log('creating admin user : ' + adminUsername );
 			db.collection('users').update({ "username" : adminUsername }
 							, { "username" : adminUsername , "password" : adminPassword , "userlevel" : 1 }
-							, { upsert: false } 
+							, { upsert: true } 
 							);
 		}
 	}
