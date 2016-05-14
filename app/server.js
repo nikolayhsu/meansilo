@@ -164,12 +164,21 @@ app.get(['/:name','/:dir/:name'], function (req, res, next) {
 // Dynamic Module Loding ( Look maa, no config )
 
 function loadModules(path) {
-    fs.lstat(path, function(err, stat) {
-        if (!stat.isDirectory()) {
-            require(path)(app, db);
-        }
-    });
+	fs.lstat(path, function(err, stat) {
+		if (stat.isDirectory()) {
+			fs.readdir(path, function(err, files) {
+				var f, l = files.length;
+				for (var i = 0; i < l; i++) {
+					f = path_module.join(path, files[i]);
+					loadModules(f);
+				}
+			});
+		} else {
+			require(path)(app, db);
+		}
+	});
 }
+
 loadModules(path_module.join(__dirname, 'public' , 'modules'));
 loadModules(path_module.join(__dirname, 'admin' , 'modules'));
 
