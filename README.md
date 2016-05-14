@@ -14,14 +14,20 @@ Start 'er up
     sudo ./run.sh
     
 
-You can find all the config settings under
+You can find all the config settings under ( This should serve all your app.get() requests automatically )
 
     /app/server.js
 
 
-After first run, you might want to comment out the following, or it will reset the admin on each server start
+Create modules for your app.post() requests in drop them into the appropiate folders
 
-    db.collection('users').update({ "username" : adminUsername }
-							, { "username" : adminUsername , "password" : adminPassword }
-							, { upsert: true } 
-							);
+    /app/public/modules/
+    /app/admin/modules/
+
+
+The "admin" user is created if it doesn't exist. Set the details in:
+
+    # /app/server.js
+    ...
+    var adminUsername = "admin";
+    var adminPassword = "password";

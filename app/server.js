@@ -42,13 +42,20 @@ app.use(session({
 	})
 }));
 
-// Insert the admin, or reset its password
-
-db.collection('users').update({ "username" : adminUsername }
+// Create the admin
+db.collection('users').find({ "username" : adminUsername },function(err , user){
+	if (err) {
+		console.log(err);	
+	} else {
+		if (user.length == 0) {
+			console.log('creating admin user : ' + adminUsername );
+			db.collection('users').update({ "username" : adminUsername }
 							, { "username" : adminUsername , "password" : adminPassword , "userlevel" : 1 }
-							, { upsert: true } 
+							, { upsert: false } 
 							);
-
+		}
+	}
+});
 
 app.use(bodyParser.json());
 
