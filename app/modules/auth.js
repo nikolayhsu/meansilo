@@ -442,8 +442,8 @@ function sendEmail (email, title, message) {
 	    port: 465,
 	    secure: true, // use SSL
 	    auth: {
-	        user: 'nikolay.brisbane@gmail.com',
-	        pass: 'kinkikids'
+	        user: '',
+	        pass: ''
 	    }
 	};
 

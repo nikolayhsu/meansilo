@@ -19,10 +19,17 @@ You can find all the config settings under ( This should serve all your app.get(
     /app/server.js
 
 
-Create modules for your app.post() requests in drop them into the appropiate folders
+To enable Nodemailer
 
-    /app/public/modules/
-    /app/admin/modules/
+    Go to /app/modules/auth.js
+
+    Set up your email address and password in line 445 & 446
+
+To enable Facebook Login
+
+    Go to /app/app/app.js
+
+    Set up your Facebook application ID in line 64
 
 
 The "admin" user is created if it doesn't exist. Set the details in:
