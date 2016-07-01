@@ -3,22 +3,14 @@
 // App Settings
 
 var appName = "My New App"
-var adminUsername = "admin";
-var adminPassword = "password";
-var appHostname = "localhost";
+var appHostname = "0.0.0.0";
 var appPort = 8888;
-var mongoHostname = "localhost";
-var mongoPort = 27017;
-var mongoDBName = "meansilodb";
-var mongoSecret = "34680346e41c11e597309a79f06e9478";
 
 // Modules
 
 var express = require('express');
 var app = express();
 var crypto = require('crypto');
-var mongojs = require('mongojs');
-var db = mongojs(mongoHostname + ':' + mongoPort + '/' + mongoDBName, ['mycollection']);
 var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -27,167 +19,88 @@ var ObjectId = require('mongodb').ObjectID;
 var md5sum = crypto.createHash('md5');
 var bodyParser = require('body-parser');
 var path_module = require('path');
+var mailer = require('nodemailer');
+
+// Customised Modules
+
+var db = require('./dbAccess');
+var auth = require('./modules/auth');
+
+db.initialise();
 
 app.use(session({
-	secret: mongoSecret,
+	secret: db.mongoSecret(),
 	resave: true,
     saveUninitialized: true,
     rolling: true,
     maxAge: 60000,
 	store: new MongoStore({
-		url: 'mongodb://'+mongoHostname+'/',
-		db: mongoDBName,
-		host: mongoHostname,
-		port: mongoPort
+		url: 'mongodb://'+ db.mongoHostname() + '/',
+		db: db.mongoDBName(),
+		host: db.mongoHostname(),
+		port: db.mongoPort()
 	})
 }));
 
-// Create the admin
-db.collection('users').find({ "username" : adminUsername },function(err , user){
-	if (err) {
-		console.log(err);	
-	} else {
-		if (user.length == 0) {
-			console.log('creating admin user : ' + adminUsername );
-			db.collection('users').update({ "username" : adminUsername }
-							, { "username" : adminUsername , "password" : adminPassword , "userlevel" : 1 }
-							, { upsert: true } 
-							);
-		}
-	}
+process.on('uncaughtException', function (err) {
+    if (err) { 
+    	console.log("============ An Error Occurred =============");
+    	console.log(err, err.stack);
+    }
 });
-
-app.use(bodyParser.json());
 
 app.engine('html', require('ejs').renderFile);
+app.use(bodyParser.json());
 
-app.use("/admin", function(req, res, next){
-	
-	if (req.session.username === undefined) {
-		
-		var fileNameParts = req.originalUrl.split('/');
-		var fileName = fileNameParts[fileNameParts.length - 1];
+// Static Files
 
-		if (fileName.indexOf(".") > 1) { 
-			res.writeHead(401);
-			res.end('401: Unauthorized', 'UTF-8');
-		} else {
-			res.redirect('/login');
-		}
+app.use("/scripts", express.static(__dirname + '/scripts'));
+app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
+app.use("/views", express.static(__dirname + '/views'));
+app.use("/app", express.static(__dirname + '/app'));
+app.use("/image", express.static(__dirname + '/image'));
 
-	} else {
-		app.use(express.static(__dirname + "/admin"));
-		next();
-	}
+// Request Handling
 
+app.get('/logout', auth.logout);
+app.get('/getLoginStatus', auth.getLoginStatus);
+
+app.post('/login', function (req, res, next) {
+	if(req.body.facebook_id)
+		auth.loginFacebook(req, res);
+	else
+		auth.login(req, res);
 });
 
-app.use(function (req, res, next) {
-
-	var isLoggedIn = (req.session.username !== undefined);
-
-	// look in the public folder for static files
-
-	req.app.use(express.static(__dirname + "/public"));
-
-	// if we are logged in, allow static files in the admin folder
-
-	if (isLoggedIn) {
-		req.app.use("/admin" , express.static(__dirname + "/admin"));
-	}
-
-	if (req.originalUrl == "/") {
-		res.redirect("/home");
-	}
-
-	next();
-	
+app.post('/register', function (req, res, next) {
+	if(req.body.facebook_id)
+		auth.registerFacebook(req, res);
+	else
+		auth.register(req, res);
 });
 
-app.get(['/:name','/:dir/:name'], function (req, res, next) {
+app.post('/forgotpassword', auth.forgotPassword);
+app.post('/resetpassword', auth.resetPassword);
 
-	var fileNameSplit = req.params.name.split('.');
-	var fileName = ( req.params.name !== undefined ? req.params.name : "home" ) + ".html";
-	var dirName = req.params.dir !== undefined ? req.params.dir : "public";
-	var isLoggedIn = (req.session.username !== undefined);
-	
-	if ( dirName === "admin" && req.params.name === "users" && req.session.userlevel > 2 ) {
+app.get('/', function (req, res, next) {
+	var isLoggedIn = (req.session.user_id !== undefined);
 
-		res.writeHead(401);
-		res.end('401: Unauthorized', 'UTF-8');
+	var renderObj =  {
+		dirname : __dirname
+		, loggedIn : isLoggedIn
+		, username : req.session.username
+		, userlevel : req.session.userlevel
+		, nickname : req.session.nickname
+		, appName : appName
+	};
 
-	} else if (( req.params.name === "login" && isLoggedIn) || req.params.name === "admin" ) {
-
-		res.redirect('/admin/home');
-		res.end();
-
-	} else if (req.params.name === "logout") {
-	
-		req.session.destroy();
-		res.redirect('/login');
-		res.end();
-	
-	} else {
-
-		// we are only converting pretty URLs to .html
-
-		if (fileNameSplit.length === 1) { 
-
-			res.render(__dirname + '/' + dirName + '/' + fileName , {
-				jsFile : '/controllers/' + req.params.name + '.js'
-				, dirname : __dirname
-				, loggedIn : isLoggedIn
-				, username : req.session.username
-				, userlevel : req.session.userlevel
-				, appName : appName
-				, path : '/' + dirName + '/' + req.params.name
-			});
-
-		} else if (fileNameSplit.length > 1 && fileNameSplit[1] === "html") {
-			
-			// redirect .html to pretty urls
-
-			if (dirName !== undefined && dirName !== "public") {
-
-				res.redirect("/" + dirName + "/" + fileNameSplit[0]);
-
-			} else {
-
-				res.redirect(301, "/" + fileNameSplit[0]);
-
-			}
-
-		} else {
-			
-			// move on to deliver static files
-			next();
-
-		}
-
-	}
-
+	res.render(__dirname + '/index.html', renderObj);
 });
 
-// Dynamic Module Loding ( Look maa, no config )
-
-function loadModules(path) {
-	fs.lstat(path, function(err, stat) {
-		if (stat.isDirectory()) {
-			fs.readdir(path, function(err, files) {
-				var f, l = files.length;
-				for (var i = 0; i < l; i++) {
-					f = path_module.join(path, files[i]);
-					loadModules(f);
-				}
-			});
-		} else {
-			require(path)(app, db);
-		}
-	});
-}
-
-loadModules(path_module.join(__dirname, 'public' , 'modules'));
-loadModules(path_module.join(__dirname, 'admin' , 'modules'));
+app.get('*', function (req, res, next) {
+	res.redirect('/#404');
+	res.end();
+});
 
 app.listen(appPort, appHostname);
 

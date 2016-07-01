@@ -1,5 +1,0 @@
-// application.js (public)
-
-$(function(){
-
-});

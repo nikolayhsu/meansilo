@@ -1,0 +1,79 @@
+<div class="container">
+	<div class="row col-md-12">
+		<h1>User Login</h1>
+	</div>
+	
+	<div class="row" ng-show="!hasLogedIn">
+		<div class="col-md-5">
+			<div class="row ms-header">
+				<h4>Login with a username</h4>
+			</div>
+			<div style="padding: 20px;">
+				<div class="alert alert-danger" role="alert" id="loginAlertBox"
+					 ng-show="loginSuccess">
+					<span class="glyphicon glyphicon-exclamation-sign"></span>
+					<span class="sr-only">Error:</span>
+					Invalid username or password.
+				</div>
+			</div>
+	  	
+	  		<form class="form-horizontal" id="searchForm" ng-submit="userLogin()">
+		
+		      <div class="form-group">
+		        <label for="username" class="col-sm-3 control-label">Username</label>
+		        <div class="col-sm-8">
+		          <input 
+		          	type="text" 
+		          	class="form-control" 
+		          	name="username" 
+		          	id="username" 
+		          	placeholder="Username" 
+		          	autocomplete=off  
+		          	ng-model="user.username">
+		        </div>
+		      </div>
+		
+		      <div class="form-group">
+		        <label for="password" class="col-sm-3 control-label">Password</label>
+		        <div class="col-sm-8">
+		          <input 
+		          	type="password"
+		          	class="form-control"
+		          	name="password"
+		          	id="password"
+		          	placeholder="Password" 
+		          	ng-model="user.password">
+		        </div>
+		      </div>
+		
+		      <div class="form-group">
+		        <div class="col-sm-8 col-sm-offset-3">
+		          <button type="submit" name="login" value="login" class="btn btn-info">Login</button>
+		          <button type="button" name="login" value="login" class="btn btn-xs btn-link pull-right" ng-click="showForgotPasswordModal()">Forgot Password</button>
+		          <button type="button" name="login" value="login" class="btn btn-xs btn-link pull-right" ng-click="toRegister()">Register</button>
+		        </div>
+		      </div>
+		    </form>
+		</div>    
+		<div class="col-md-4">
+			<div class="row ms-header">	
+				<h4>Login with Social Media</h4>
+			</div>
+			<div class="row">
+				<div>
+					<button class="btn btn-link" ng-click="facebookLogin()">
+						<img src="/app/image/facebook-logo.png" height="140" width="140" class="img-thumbnail"></img>	
+					</button>
+				</div>
+			</div>
+		</div>	
+	</div>
+
+	<div class="row" ng-show="hasLogedIn">
+		<div class="col-md-5">
+			<div class="row ms-header">
+				<h4>You have logged in. Go Away!</h4>
+			</div>
+		</div>
+	</div>
+</div>

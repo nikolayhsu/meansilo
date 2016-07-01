@@ -1,0 +1,18 @@
+<div class="form-group" ng-class="ngClass" id="{{id}}_group">
+	<label for="{{name}}" class="{{'col-sm-' + labelLength}} control-label">{{label}}</label>
+	<div class="{{'col-sm-' + inputLength}}">
+		<input  type="{{type}}" 
+				class="form-control" 
+				name="{{msName}}" 
+				id="{{msId}}" 
+				placeholder="{{placeholder}}"
+				ng-maxlength="ngMaxlength"
+				ng-minlength="ngMinlength"
+				ng-model="ngModel"
+				ng-required="msRequired" />
+	</div>
+	<div class="{{'col-sm-' + (12 - inputLength - labelLength)}}">
+		<span class="ms-error-message">{{error}}</span>
+	</div>
+</div>
+

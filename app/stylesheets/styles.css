@@ -1,0 +1,58 @@
+/* Main Stylesheet */
+
+html {
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#ng-view {
+    position: relative;
+    padding-top: 60px;
+}
+
+button.btn.btn-link:hover {
+	opacity: 0.8;
+}
+
+span.ms-error-message {
+	color: red;
+}
+
+div.ms-header {
+	margin-bottom: 20px;
+}
+
+form {
+	padding-top: 20px;
+}
+
+.noResultsText {
+	text-align: center;
+	padding: 80px;
+	color: #999;
+}
+
+.modal-header.primary {
+	background-color: #337ab7;
+	color: #FFF;
+}
+
+.modal-header.danger {
+	background-color: #d9534f;
+	color: #FFF;
+}
+
+.modal-header.warning {
+	background-color: #f0ad4e;
+	color: #FFF;
+}
+
+.modal-header.success {
+	background-color: #5cb85c;
+	color: #FFF;
+}
+
+.modal-header.info {
+	background-color: #5bc0de;
+	color: #FFF;
+}

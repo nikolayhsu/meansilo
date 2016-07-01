@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      
+      <title><%= appName %></title>      
+
+      <!-- Vendor Javascript -->
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+      <link rel="stylesheet" href="/stylesheets/ui-bootstrap/ui-bootstrap-csp.css">
+
+      <!-- Custom styles for this template -->
+      <link rel="stylesheet" href="/stylesheets/styles.css">
+      <link rel="shortcut icon" href="/image/favicon.ico">
+
+      <!-- <link rel="stylesheet" href="/css/animations.css"> -->      
+    </head>
+
+    <body>      
+      <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="NavbarController">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/#home"><%= appName %></a>
+          </div>
+          <div id="navbar" class="collapse navbar-collapse">
+            
+            <ul class="nav navbar-nav">
+              <li ng-class="{active: activeTab == 'home'}"><a href="/#home">Home</a></li>
+              <li ng-class="{active: activeTab == 'about'}"><a href="/#about">About</a></li>
+              <li ng-class="{active: activeTab == 'contact'}"><a href="/#contact">Contact</a></li>
+              <% if ( loggedIn && userlevel == 1) { %>
+                <li ng-class="{active: activeTab == 'admin'}"><a href="/#admin">Admin</a></li>
+                <li ng-class="{active: activeTab == 'users'}"><a href="/#users">Users</a></li>
+              <% } %>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+              <% if ( loggedIn ) { %>
+                <% if (nickname) { %>
+                  <li><a><img ng-cloak ng-show="fb.length > 0" ng-src="{{fb}}" width="20" height="20" alt="FB">&nbsp;<span>Hi! <%= nickname %></span></a></li>
+                <% } else { %>
+                   <li><a><img ng-cloak ng-show="fb.length > 0" ng-src="{{fb}}" width="20" height="20" alt="FB"><span>Hi! <%= username %></span></a></li>
+                <% } %>
+                <li><a href="/logout"><span class="glyphicon glyphicon-user"></span> Logout</a></li>
+              <% } else { %>
+                <li ng-class="{active: activeTab == 'login'}"><a href="/#login"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+      </nav>

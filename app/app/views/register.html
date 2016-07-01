@@ -1,0 +1,124 @@
+<div class="container" ng-cloak>
+	<div class="row col-md-12">
+		<h1>Register</h1>
+	</div>
+
+	<div class="row" ng-show="!result.success" >
+		<div class="col-md-8">
+			<div class="row ms-header">
+				<h4>Register with a username</h4>
+			</div>
+
+			<div class="alert alert-danger" role="alert" id="loginAlertBox"  ng-show="result.errorMessage.length">
+				<span class="glyphicon glyphicon-exclamation-sign"></span>
+				<span class="sr-only">Error:</span>
+				<span ng-repeat="message in result.errorMessage">{{message}}</span>
+			</div>
+
+	  		<form name="form" class="form-horizontal" novalidate ng-submit="register()">
+	  		   	<ms-text-input type="email"
+	          				   ms-id="username"
+	          				   ms-name="username"
+	          				   ms-required="required"
+	          				   placeholder="Username (Email Address)"
+	          				   label="Username"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   ng-model="user.username"
+	          				   ng-maxlength="50">
+	          	</ms-text-input>
+         	
+	          	<ms-text-input type="password"
+	          				   id="password"
+	          				   ms-name="password"
+	          				   ms-required="required"
+	          				   placeholder="Password"
+	          				   mask="password"
+	          				   label="Password"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   ng-model="user.password"
+	          				   ng-maxlength="12"
+	          				   ng-minlength="8">
+	          	</ms-text-input>
+
+	          	<ms-text-input type="password"
+	          				   id="confirm_password"
+	          				   ms-name="confirm_password"
+	          				   ms-required="required"
+	          				   placeholder="Confirm Password"
+	          				   label="Confirm Password"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   ng-model="user.confirm_password"
+	          				   ng-maxlength="12"
+	          				   ng-minlength="8">
+	          	</ms-text-input>
+
+	          	<ms-text-input type="text"
+	          				   id="nickname"
+	          				   ms-name="nickname"
+	          				   ms-required="required"
+	          				   placeholder="Name to Display"
+	          				   label="Nickname"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   ng-model="user.nickname"
+	          				   ng-maxlength="20"
+	          				   ng-minlength="1">
+	          	</ms-text-input>
+
+	          	<!-- <ms-text-input type="email"
+	          				   id="email"
+	          				   ms-name="email"
+	          				   placeholder="Email"
+	          				   label="Email"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   ng-model="user.email"
+	          				   ng-maxlength="50">
+	          	</ms-text-input> -->
+
+	          	<ms-text-input type="text"
+	          				   id="mobile"
+	          				   ms-name="mobile"
+	          				   placeholder="Mobile (optional)"
+	          				   label="Mobile"
+	          				   label-length="3"
+	          				   input-length="5"
+	          				   mask="mobile"
+	          				   ng-model="user.mobile"
+	          				   ng-minlength="10"
+	          				   ng-maxlength="10">
+	          	</ms-text-input>
+		
+		      	<div class="form-group">
+		        	<div class="col-sm-5 col-sm-offset-3">
+		          		<button type="submit" name="login" value="login" class="btn btn-info">Register</button>
+		          		<button type="button" class="btn btn-xs btn-link pull-right"
+		          		  ng-click="goToLogin()">Login</button>
+		        	</div>
+		      	</div>
+		    </form>		    
+		</div>
+		<div class="col-md-4">
+			<div class="row ms-header">	
+				<h4>Register with Social Media</h4>
+			</div>
+			<div class="row">
+				<div>
+					<button class="btn btn-link" ng-click="facebookRegister()">
+						<img src="/app/image/facebook-logo.png" height="140" width="140" class="img-thumbnail"></img>	
+					</button>
+				</div>
+			</div>
+		</div>	
+	</div>
+	<div class="row" ng-show="result.success" ng-cloak>
+		<div class="col-md-8">
+			Your Account {{user.username}} has been created successfully.
+
+			<button type="button" class="btn btn-primary" ng-click="goToLogin()">Login</button>
+		</div>
+	</div>
+</div>
