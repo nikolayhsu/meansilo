@@ -84,7 +84,7 @@ app.post('/resetpassword', auth.resetPassword);
 
 app.get('/', function (req, res, next) {
 	var isLoggedIn = (req.session.user_id !== undefined);
-
+	console.log(req.session.user_id);
 	var renderObj =  {
 		dirname : __dirname
 		, loggedIn : isLoggedIn

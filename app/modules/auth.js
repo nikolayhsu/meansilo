@@ -50,6 +50,7 @@ exports.login = function (req, res) {
 			} else if ( user !== null ) {
 			
 				req.session._id = user._id;
+				req.session.user_id = user.user_id;
 				req.session.username = user.username;
 				req.session.userlevel = user.userlevel;
 				req.session.nickname = user.nickname;
