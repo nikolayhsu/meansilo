@@ -36,8 +36,6 @@ define(['core/routeResolver'], function () {
                 .when('/resetpassword/:user/:token', route.resolve('ResetPassword'))
                 .when('/admin', route.resolve('Admin', 'admin/', true))
                 .when('/users', route.resolve('Users', 'admin/', true))
-                .when('/students', route.resolve('Students', 'admin/', true))
-                .when('/students/:stud_code', route.resolve('StudentDetail', 'admin/', true))
                 .when('/403', route.resolve('403'))
                 .when('/404', route.resolve('404'))
                 .otherwise({ redirectTo: '/404' });
@@ -65,7 +63,7 @@ define(['core/routeResolver'], function () {
                 }
             });
 
-            var _appId = '';
+            var _appId = '1743360979275241';
             var _channelUrl = 'app/views/channel.html';
 
             if(typeof FB !== 'undefined') {

@@ -16,11 +16,8 @@ require(
         'core/routeResolver',
         'services/AuthService',
         'services/ModalService',
-        'services/StudentService',
         'controllers/NavbarController',
-        'directives/textInputDirective',
-        'directives/studentDirective',
-        'filters/yeargroupFilter'
+        'directives/textInputDirective'
     ],
     function () {
         angular.bootstrap(document, ['meansiloApp']);
