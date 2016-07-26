@@ -63,7 +63,7 @@ define(['core/routeResolver'], function () {
                 }
             });
 
-            var _appId = '1743360979275241';
+            var _appId = '';
             var _channelUrl = 'app/views/channel.html';
 
             if(typeof FB !== 'undefined') {
