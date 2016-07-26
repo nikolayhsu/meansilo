@@ -1,13 +1,36 @@
 <div class="container">
-	<div class="row">
+	<div class="col-md-12">
 		<h1>Admin</h1>
 	</div>
 
-	<div class="row">
-		<div class="col-md-5">
-	  		Make some changes.		    
+
+	<div class="col-md-4">
+		<div class="ms-header">
+			<h4>Year Group Setup</h4>
 		</div>
-		<div class="col-md-7"></div>
+  		<form name="yeargroupForm" class="form-horizontal" novalidate ng-submit="updateYearGroups()">
+  			<ms-text-input ng-repeat="yeargroup in yeargroups"
+  						   type="text"
+	      				   id="{{ 'yeargroup' + yeargroup.year_grp.toString() }}"
+	      				   ms-name="{{ 'yeargroup' + yeargroup.year_grp.toString() }}"
+	      				   ms-required="required"
+	      				   placeholder="{{yeargroup.year_grp }}"
+	      				   label="{{ yeargroup.year_grp }}"
+	      				   label-length="1"
+	      				   input-length="5"
+	      				   ng-model="yeargroup.year_grp_desc"
+	      				   ng-maxlength="2"
+	      				   ng-minlength="0"
+	      				   >
+	      	</ms-text-input>
+	      	<div class="form-group">
+	        	<button type="submit" class="btn btn-primary">Submit</button>
+				<button type="button" class="btn btn-warning" ng-click="resetForm()">Cancel</button>
+	      	</div>
+  		</form>	    
+	</div>
+	<div class="col-md-7">
+		
 	</div>
 </div>
 		

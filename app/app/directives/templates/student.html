@@ -1,0 +1,28 @@
+<div class="col-md-3 student-block" ng-class="{male: ngModel.gender == 'M',
+												female: ngModel.gender == 'F'}">
+	<div class="student-block-header">
+		<div class="col-md-3 gender">
+			<span><i class="fa" ng-class="{'fa-mars': ngModel.gender == 'M',
+											'fa-venus': ngModel.gender == 'F'}"></i></span>
+		</div>
+		<div class="col-md-6 stud-code text-center">
+			<span ng-bind="ngModel.stud_code"></span>
+		</div>
+		<div class="col-md-3 year-group">
+			<span ng-bind="ngModel.year_grp | yeargroup"></span>
+		</div>
+	</div>
+
+	<div class="student-block-photo">
+		<img ng-src="/app/image/students/{{ngModel.stud_code}}.jpg" onerror="this.src='/app/image/students/unavailable.gif'"></img>
+	</div>
+	
+	<div class="student-block-footer">
+		<div class="name">
+			<span class="capitalize" ng-bind="ngModel.given_name"></span>
+		</div>
+		<div class="name">
+			<span>{{ ngModel.surname | uppercase }}</span>
+		</div>
+	</div>
+</div>

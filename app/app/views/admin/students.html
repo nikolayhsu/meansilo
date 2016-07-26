@@ -1,0 +1,100 @@
+<div class="container">
+	<div class="col-md-5">
+		<h1>Students</h1>
+		<button type="button" class="btn btn-primary" 
+				ng-click="changeMode('add')"
+				ng-disabled="(mode != '' && mode != 'add') || selectedStudents.count > 0"><i class="fa fa-plus"></i> Add</button>
+		<button type="button" class="btn btn-success" 
+				ng-click="changeMode('edit')"
+				ng-disabled="(mode != '' && mode != 'edit') || selectedStudents.count == 0 || selectedStudents.count > 1"><i class="fa fa-pencil"></i> Edit</button>		
+		<div ng-show="mode != ''">
+			<form name="form" class="form-horizontal" novalidate ng-submit="processStudent()">
+		  		<ms-text-input type="text"
+		      				   id="stud_code"
+		      				   ms-name="stud_code"
+		      				   ms-required="required"
+		      				   ms-disabled="mode == 'edit'"
+		      				   placeholder="Student Code"
+		      				   label="Student Code"
+		      				   label-length="3"
+		      				   input-length="5"
+		      				   ng-model="student.stud_code"
+		      				   ng-maxlength="10"
+		      				   ng-minlength="5"
+		      				   >
+		      	</ms-text-input>
+		      	<ms-text-input type="text"
+		      				   id="given_name"
+		      				   ms-name="given_name"
+		      				   ms-required="required"
+		      				   placeholder="Given Name"
+		      				   label="Given Name"
+		      				   label-length="3"
+		      				   input-length="5"
+		      				   ng-model="student.given_name"
+		      				   ng-maxlength="20"
+		      				   ng-minlength="1">
+		      	</ms-text-input>
+		      	<ms-text-input type="text"
+		      				   id="surname"
+		      				   ms-name="surname"
+		      				   ms-required="required"
+		      				   placeholder="Surname"
+		      				   label="Surname"
+		      				   label-length="3"
+		      				   input-length="5"
+		      				   ng-model="student.surname"
+		      				   ng-maxlength="20"
+		      				   ng-minlength="1">
+		      	</ms-text-input>
+		      	<div class="form-group">
+		      		<label for="year_grp" class="col-sm-3 control-label">Year Group</label>
+			      	<div class="col-sm-5">
+				        <select id="year_grp"
+				        		class="form-control"
+				        		name="year_grp"
+				        		ng-model="student.year_grp">
+				        	<option ng-repeat="yeargroup in yeargroups"
+				        			ng-selected="student.year_grp === yeargroup.year_grp"
+				        			ng-value="yeargroup.year_grp">{{ yeargroup.year_grp_desc }}</option>
+				        </select>
+				    </div>
+				</div>
+		      	<div class="form-group">
+		      		<label class="col-sm-3 control-label">Gender</label>
+			      	<div class="btn-group col-sm-5">
+				        <label class="btn btn-primary" ng-model="student.gender" uib-btn-radio="'M'">Male</label>
+				        <label class="btn btn-primary" ng-model="student.gender" uib-btn-radio="'F'">Female</label>
+				        <input type="hidden" name="gender" ng-model="student.gender"></input>
+				    </div>
+				</div>
+		      	<button type="submit" class="btn btn-primary">Submit</button>
+				<button type="button" class="btn btn-warning" ng-click="resetForm()">Cancel</button>
+		    </form>			
+		</div>
+	</div>
+	<div class="col-md-7">
+		<div class="tool-box">
+			<button type="button" class="btn btn-primary" 
+				ng-click="resetForm()"
+				ng-disabled="selectedStudents.count == 0"><i class="fa fa-times"></i> Deselect All</button>
+			<button type="button" class="btn btn-info" 
+				ng-click="viewStudent()"
+				ng-disabled="selectedStudents.count > 1 || selectedStudents.count == 0"><i class="fa fa-eye"></i> View</button>
+			<button type="button" class="btn btn-danger" 
+				ng-click="deleteStudents()"
+				ng-disabled="(mode != '' && mode != 'delete') || selectedStudents.count == 0"><i class="fa fa-trash"></i> Delete</button>
+			<select class="list" ng-model="sort" ng-change="showSort()">
+				<option ng-repeat="order in orders" value="{{order.value}}">{{ order.label }}</option>
+			</select>
+			<span class="label label-info info-label">Selected: {{ selectedStudents.count }}</span>	
+		</div>
+		<div class="scrollable">
+			<ms-student ng-repeat="stud in getStudentArray(students) | orderBy: sort" ng-model="stud" ng-click="selectStudent(stud.stud_code)">
+			</ms-student>
+			<div ng-show="Object.keys(students).length == 0 && !isRefreshing" class="no-content" ng-cloak>
+				<span>There are no student records.</span>
+			</div>
+		</div>
+	</div>
+</div>
