@@ -489,7 +489,7 @@ function generateUserId(count, userLevel, callback) {
     	if(err) {
     		console.log(err);
     	} else if(user && user.user_id) {
-    		generate(count, userLevel, callback);
+    		generateUserId(count, userLevel, callback);
     	}
 
     	if(!(user && user.user_id)) {

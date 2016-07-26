@@ -1,4 +1,4 @@
-<div class="form-group" ng-class="ngClass" id="{{id}}_group">
+<div class="form-group" ng-class="ngClass" id="{{id + '_group'}}">
 	<label for="{{name}}" class="{{'col-sm-' + labelLength}} control-label">{{label}}</label>
 	<div class="{{'col-sm-' + inputLength}}">
 		<input  type="{{type}}" 
@@ -9,7 +9,8 @@
 				ng-maxlength="ngMaxlength"
 				ng-minlength="ngMinlength"
 				ng-model="ngModel"
-				ng-required="msRequired" />
+				ng-required="msRequired"
+				ng-disabled="msDisabled" />
 	</div>
 	<div class="{{'col-sm-' + (12 - inputLength - labelLength)}}">
 		<span class="ms-error-message">{{error}}</span>

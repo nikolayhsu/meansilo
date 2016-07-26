@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-define(['app/js/app.js'], function (app) {
+define(['core/app'], function (app) {
 
     var injectParams = ['$scope', '$location', '$rootScope', 'AuthService'];
 

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['app/js/app.js'], function (app) {
+define(['core/app'], function (app) {
 
     var msTextInput = function () {
         return {
@@ -13,6 +13,7 @@ define(['app/js/app.js'], function (app) {
                 msId: '@',
                 msName: '@',
                 msRequired: '@',
+                msDisabled: '=',
                 mask: '@',
                 label: '@',
                 placeholder: '@',

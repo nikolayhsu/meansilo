@@ -1,9 +1,9 @@
 'use strict';
 
-define(['app/js/app.js',
-        'app/controllers/modal/ConfirmModalController.js',
-        'app/controllers/modal/ForgotPasswordController.js',
-        'app/controllers/modal/InfoModalController.js'], function (app) {
+define(['core/app',
+        'controllers/modal/ConfirmModalController',
+        'controllers/modal/ForgotPasswordController',
+        'controllers/modal/InfoModalController'], function (app) {
     //This controller retrieves data from the customersService and associates it with the $scope
     //The $scope is ultimately bound to the customers view due to convention followed by the routeResolver
     var injectParams = ['$uibModal'];

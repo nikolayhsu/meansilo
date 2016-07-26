@@ -29,6 +29,28 @@ module.exports = {
 
 		var db = mongojs(mongoHostname + ':' + mongoPort + '/' + mongoDBName, ['mycollection']);
 
+		db.collection('students').createIndex({stud_code: 1});
+
+		db.collection('yeargroups').createIndex({year_grp: 1});
+
+		for(var i = -3; i <= 12; i++) {
+			var yeargroup = {
+				'year_grp': i,
+				'year_grp_desc': i
+			};
+
+			var combo = {
+				'year_grp': i
+			};
+
+			db.collection('yeargroups').update(
+				combo,
+				yeargroup,
+				{ upsert: true 
+				}
+			);
+		}
+
 		// Clear All Data in Collection 'users'
 		db.collection('users').drop(function () {
 

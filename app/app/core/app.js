@@ -1,6 +1,6 @@
 'use strict';
 
-define(['app/js/routeResolver.js'], function () {
+define(['core/routeResolver'], function () {
 
     var app = angular.module('meansiloApp', ['ngRoute','routeResolverServices', 'ngAnimate', 'ngTouch', 'ui.bootstrap']);
 
@@ -36,6 +36,8 @@ define(['app/js/routeResolver.js'], function () {
                 .when('/resetpassword/:user/:token', route.resolve('ResetPassword'))
                 .when('/admin', route.resolve('Admin', 'admin/', true))
                 .when('/users', route.resolve('Users', 'admin/', true))
+                .when('/students', route.resolve('Students', 'admin/', true))
+                .when('/students/:stud_code', route.resolve('StudentDetail', 'admin/', true))
                 .when('/403', route.resolve('403'))
                 .when('/404', route.resolve('404'))
                 .otherwise({ redirectTo: '/404' });
@@ -53,48 +55,52 @@ define(['app/js/routeResolver.js'], function () {
 
             $rootScope.$on("$routeChangeStart", function (event, next, current) {
                 if (next && next.$$route && next.$$route.secure) {
-                    if (!AuthService.user.logedin) {
-                        AuthService.redirectToLogin();
-                    } else if (AuthService.user.logedin && AuthService.user.userlevel > 1) {                            
-                        $location.path("/403");
-                    }
+                    AuthService.getLoginStatus(function (user) {
+                        if(!user.logedin) {
+                            AuthService.redirectToLogin();
+                        } else if(user.logedin && user.userlevel > 1) {
+                            $location.path("/403");
+                        }
+                    });
                 }
             });
 
             var _appId = '';
             var _channelUrl = 'app/views/channel.html';
 
-            $window.fbAsyncInit = function() {
-                // Executed when the SDK is loaded
+            if(typeof FB !== 'undefined') {
+                $window.fbAsyncInit = function() {
+                    // Executed when the SDK is loaded
 
-                FB.init({
-                    appId: _appId,
-                    channelUrl: _channelUrl,
-                    status: true,
-                    cookie: true,
-                    xfbml: true,
-                    version: 'v2.6'
-                });
-            }
-
-            (function(d){
-              // load the Facebook javascript SDK
-
-                var js, id = 'facebook-jssdk',
-                ref = d.getElementsByTagName('script')[0];
-
-                if (d.getElementById(id)) {
-                  return;
+                    FB.init({
+                        appId: _appId,
+                        channelUrl: _channelUrl,
+                        status: true,
+                        cookie: true,
+                        xfbml: true,
+                        version: 'v2.6'
+                    });
                 }
 
-                js = d.createElement('script');
-                js.id = id;
-                js.async = true;
-                js.src = "//connect.facebook.net/en_US/all.js";
+                (function(d){
+                  // load the Facebook javascript SDK
 
-                ref.parentNode.insertBefore(js, ref);
+                    var js, id = 'facebook-jssdk',
+                    ref = d.getElementsByTagName('script')[0];
 
-            }(document));
+                    if (d.getElementById(id)) {
+                      return;
+                    }
+
+                    js = d.createElement('script');
+                    js.id = id;
+                    js.async = true;
+                    js.src = "//connect.facebook.net/en_US/all.js";
+
+                    ref.parentNode.insertBefore(js, ref);
+
+                }(document));
+            }
         }
     ]);
 

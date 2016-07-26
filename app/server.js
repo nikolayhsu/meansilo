@@ -25,6 +25,9 @@ var mailer = require('nodemailer');
 
 var db = require('./dbAccess');
 var auth = require('./modules/auth');
+var student = require('./modules/student');
+
+var devMode = true;
 
 db.initialise();
 
@@ -56,9 +59,14 @@ app.use(bodyParser.json());
 
 app.use("/scripts", express.static(__dirname + '/scripts'));
 app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
-app.use("/views", express.static(__dirname + '/views'));
+// app.use("/views", express.static(__dirname + '/views'));
 app.use("/app", express.static(__dirname + '/app'));
-app.use("/image", express.static(__dirname + '/image'));
+
+app.use("/image", express.static(__dirname + '/app/image'));
+
+if(devMode) {
+	app.use("/test", express.static(__dirname + '/test'));
+}
 
 // Request Handling
 
@@ -82,9 +90,18 @@ app.post('/register', function (req, res, next) {
 app.post('/forgotpassword', auth.forgotPassword);
 app.post('/resetpassword', auth.resetPassword);
 
+app.post('/students/:func', function (req, res, next) {
+	var func = req.params.func;
+
+	if(!func || student[func] == undefined) 
+		res.status(404).send('Function Not Found');
+	else
+		student[func](req, res);
+});
+
 app.get('/', function (req, res, next) {
 	var isLoggedIn = (req.session.user_id !== undefined);
-	console.log(req.session.user_id);
+
 	var renderObj =  {
 		dirname : __dirname
 		, loggedIn : isLoggedIn
@@ -95,6 +112,15 @@ app.get('/', function (req, res, next) {
 	};
 
 	res.render(__dirname + '/index.html', renderObj);
+});
+
+app.get('/testing', function (req, res, next) {
+	if(devMode) {
+		res.render(__dirname + '/test.html');
+	} else {
+		res.redirect('/#404');
+		res.end();
+	}
 });
 
 app.get('*', function (req, res, next) {
