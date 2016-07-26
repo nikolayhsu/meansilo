@@ -25,7 +25,7 @@ var mailer = require('nodemailer');
 
 var db = require('./dbAccess');
 var auth = require('./modules/auth');
-// var student = require('./modules/student');
+var student = require('./modules/student');
 
 var devMode = true;
 
@@ -90,14 +90,14 @@ app.post('/register', function (req, res, next) {
 app.post('/forgotpassword', auth.forgotPassword);
 app.post('/resetpassword', auth.resetPassword);
 
-// app.post('/students/:func', function (req, res, next) {
-// 	var func = req.params.func;
+app.post('/students/:func', function (req, res, next) {
+	var func = req.params.func;
 
-// 	if(!func || student[func] == undefined) 
-// 		res.status(404).send('Function Not Found');
-// 	else
-// 		student[func](req, res);
-// });
+	if(!func || student[func] == undefined) 
+		res.status(404).send('Function Not Found');
+	else
+		student[func](req, res);
+});
 
 app.get('/', function (req, res, next) {
 	var isLoggedIn = (req.session.user_id !== undefined);
