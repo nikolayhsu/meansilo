@@ -4,14 +4,19 @@ define(['core/app'], function (app) {
 
     //This controller retrieves data from the customersService and associates it with the $scope
     //The $scope is ultimately bound to the customers view due to convention followed by the routeResolver
-    var injectParams = ['$scope','$http', '$location'];
+    var injectParams = ['$scope','$http', '$location', 'SettingService'];
 
-    var RegisterController = function ($scope,$http, $location) {
+    var RegisterController = function ($scope,$http, $location, SettingService) {
     	$scope.user = {};
         $scope.result = {
             success: false,
             errorMessage: []
         };
+        $scope.isFbEnabled = "";
+
+        SettingService.getSettingById("FB_ENABLED", function (response) {
+            $scope.isFbEnabled = response.setting_value;
+        });
     	
         $scope.goToLogin = function () {
             $location.path('/login');

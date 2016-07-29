@@ -25,31 +25,72 @@ module.exports = {
 	mongoSecret: function () {
 		return mongoSecret;
 	},
-	initialise: function () {
+	initialise: function (callback) {
 
 		var db = mongojs(mongoHostname + ':' + mongoPort + '/' + mongoDBName, ['mycollection']);
 
-		db.collection('students').createIndex({stud_code: 1});
+		db.collection('setting').createIndex({setting_id: 1});
 
-		db.collection('yeargroups').createIndex({year_grp: 1});
+		db.collection('setting').findOne({ "setting_id" : "FB_ENABLED" }, function (err , setting) {
+			if(err) {
+				console.log(err);
+			} else if (!(setting && setting.setting_id)) {
+				var settingData = [
+					{
+						"setting_id": "FB_ENABLED",
+						"setting_value": false,
+						"setting_desc": "Enable/Disable Facebook Login",
+						"setting_group": "FACEBOOK"
+					}, 
+					{
+						"setting_id": "FB_APP_ID",
+						"setting_value": "",
+						"setting_desc": "Facebook Application Id",
+						"setting_group": "FACEBOOK"
+					}, 
+					{
+						"setting_id": "EMAIL_ENABLED",
+						"setting_value": false,
+						"setting_desc": "Enable/Disable System Email",
+						"setting_group": "SYSTEM_EMAIL"
+					},
+					{
+						"setting_id": "EMAIL_HOST",
+						"setting_value": "",
+						"setting_desc": "System Email Host",
+						"setting_group": "SYSTEM_EMAIL"
+					}, 
+					{
+						"setting_id": "EMAIL_PORT",
+						"setting_value": "",
+						"setting_desc": "System Email Port",
+						"setting_group": "SYSTEM_EMAIL"
+					},
+					{
+						"setting_id": "EMAIL_SECURE",
+						"setting_value": false,
+						"setting_desc": "System Email Secure Mode",
+						"setting_group": "SYSTEM_EMAIL"
+					},  
+					{
+						"setting_id": "EMAIL_ADDRESS",
+						"setting_value": "",
+						"setting_desc": "System Email Address",
+						"setting_group": "SYSTEM_EMAIL"
+					},
+					{
+						"setting_id": "EMAIL_PASSWORD",
+						"setting_value": "",
+						"setting_desc": "System Email Password",
+						"setting_group": "SYSTEM_EMAIL"
+					}
+				];
 
-		for(var i = -3; i <= 12; i++) {
-			var yeargroup = {
-				'year_grp': i,
-				'year_grp_desc': i
-			};
-
-			var combo = {
-				'year_grp': i
-			};
-
-			db.collection('yeargroups').update(
-				combo,
-				yeargroup,
-				{ upsert: true 
-				}
-			);
-		}
+				db.collection('setting').insert(
+					settingData
+				);
+			}
+		});
 
 		// Clear All Data in Collection 'users'
 		db.collection('users').drop(function () {

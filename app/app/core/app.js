@@ -1,8 +1,16 @@
 'use strict';
 
 define(['core/routeResolver'], function () {
+    var dependencies = [
+        'ngRoute',
+        'routeResolverServices', 
+        'ngAnimate', 
+        'ngTouch', 
+        'ui.bootstrap',
+        'ngTable'
+    ];
 
-    var app = angular.module('meansiloApp', ['ngRoute','routeResolverServices', 'ngAnimate', 'ngTouch', 'ui.bootstrap']);
+    var app = angular.module('meansiloApp', dependencies);
 
     app.config(['$routeProvider', 'routeResolverProvider', '$controllerProvider', '$locationProvider',
                 '$compileProvider', '$filterProvider', '$provide',
@@ -42,10 +50,11 @@ define(['core/routeResolver'], function () {
 
     }]);
 
-    app.run(['$q',  '$rootScope', '$location', '$window', 'AuthService', 
-        function ($q,  $rootScope, $location, $window, AuthService) {            
+    app.run(['$q',  '$rootScope', '$location', '$window', 'AuthService', 'SettingService',
+        function ($q,  $rootScope, $location, $window, AuthService, SettingService) {            
             //Client-side security. Server-side framework MUST add it's 
-            //own security as well since client-based security is easily hacked                
+            //own security as well since client-based security is easily hacked
+            $rootScope.isFbInitialised = false;                
 
             $rootScope.$on("$routeChangeError", function (event, next, current) {
                 $location.path('/');
@@ -63,21 +72,27 @@ define(['core/routeResolver'], function () {
                 }
             });
 
-            var _appId = '';
-            var _channelUrl = 'app/views/channel.html';
+            SettingService.getSettingById("FB_ENABLED", function (FB_ENABLED) {
+                if(typeof FB !== 'undefined' && FB_ENABLED.setting_value) {
+                    SettingService.getSettingById("FB_APP_ID", function (FB_APP_ID) {
+                        initialiseFb(FB_APP_ID.setting_value);
+                    });
+                }
+            });
 
-            if(typeof FB !== 'undefined') {
+            var initialiseFb = function (FB_APP_ID) {
                 $window.fbAsyncInit = function() {
                     // Executed when the SDK is loaded
-
                     FB.init({
-                        appId: _appId,
-                        channelUrl: _channelUrl,
+                        appId: FB_APP_ID,
+                        channelUrl: 'app/views/channel.html',
                         status: true,
                         cookie: true,
                         xfbml: true,
                         version: 'v2.6'
                     });
+
+                    $rootScope.isFbInitialised = true;
                 }
 
                 (function(d){

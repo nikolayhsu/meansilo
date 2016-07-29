@@ -2,12 +2,14 @@
 
 define(['core/app'], function (app) {
 
-    var injectParams = ['$scope', '$location', '$rootScope', 'AuthService'];
+    var injectParams = ['$scope', '$location', '$rootScope', 'AuthService', '$interval'];
 
-    var NavbarController = function ($scope, $location, $rootScope, AuthService) {
+    var NavbarController = function ($scope, $location, $rootScope, AuthService, $interval) {
         $scope.activeTab = "";
         $scope.active = 'active';
         $scope.fb = "";
+
+        var retrieveImage;
 
         $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
             var path = [];
@@ -38,32 +40,39 @@ define(['core/app'], function (app) {
             fields: ['picture']
         };
 
-        AuthService.getLoginStatus(function (user) {
-            if(user.logedin && user.facebook_id) {
-                FB.getLoginStatus(function(response) {
+        var getFbImage = function () {
+            if($rootScope.isFbInitialised) {
+                $interval.cancel(retrieveImage);
+
+                FB.getLoginStatus(function (response) {
                     if (response.status == 'connected') {
                         FB.api(
                             "/me", fields,
                             function (response) {
-                              if (response && !response.error) {                        
-                                if(response.picture) {                           
-                                    setFbThumbNail(response.picture.data.url);
+                                if (response && !response.error) {                        
+                                    if(response.picture) {                           
+                                        setFbThumbNail(response.picture.data.url);
+                                    } else {
+                                        setFbThumbNail("");;
+                                    }
                                 } else {
-                                    setFbThumbNail("");;
+                                    setFbThumbNail("");
                                 }
-                              } else {
-                                setFbThumbNail("");
-                              }
                             }
                         );
                     }
                 });
             }
+        }
+
+        AuthService.getLoginStatus(function (user) {
+            if(user.logedin && user.facebook_id) {
+                retrieveImage = $interval(getFbImage, 1000);
+            }
         });        
     };
 
     NavbarController.$inject = injectParams;
-
 
     //Loaded normally since the script is loaded upfront 
     //Dynamically loaded controller use app.register.controller

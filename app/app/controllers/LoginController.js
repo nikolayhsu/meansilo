@@ -4,18 +4,23 @@ define(['core/app'], function (app) {
 
     //This controller retrieves data from the customersService and associates it with the $scope
     //The $scope is ultimately bound to the customers view due to convention followed by the routeResolver
-    var injectParams = ['$scope','$http', '$location', 'AuthService', 'ModalService'];
+    var injectParams = ['$scope','$http', '$location', 'AuthService', 'ModalService', 'SettingService'];
 
-    var LoginController = function ($scope, $http, $location, AuthService, ModalService) {
+    var LoginController = function ($scope, $http, $location, AuthService, ModalService, SettingService) {
 
     	$scope.loginSuccess = false;
     	$scope.hasLogedIn = false;
+        $scope.isFbEnabled = false;
         
     	AuthService.getLoginStatus(function (response) {
     		if(response.logedin) {
     			$scope.hasLogedIn = true;
     		}
     	});
+
+        SettingService.getSettingById("FB_ENABLED", function (response) {
+            $scope.isFbEnabled = response.setting_value;
+        });
 
     	$scope.facebookLogin = function () {
             FB.getLoginStatus(function (response) {

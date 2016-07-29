@@ -49,8 +49,8 @@ define(['core/app'], function (app) {
                 }
 
                 element.bind("keypress", function (event) {
-                    if(!scope.mask)
-                        return;
+                    // if(!scope.mask)
+                    //     return;
 
                     if(scope.mask == 'password')
                         return;
@@ -60,7 +60,7 @@ define(['core/app'], function (app) {
                     
                     key = String.fromCharCode(key);
           
-                    if(!regex.test(key) || valueInvalid()) {
+                    if((scope.mask && !regex.test(key)) || valueInvalid()) {
                         _event.returnValue = false;
 
                         if (_event.preventDefault)
@@ -137,7 +137,7 @@ define(['core/app'], function (app) {
                         if(x == 'required')
                             break;
                     }
-
+                    
                     return message;
                 }
 

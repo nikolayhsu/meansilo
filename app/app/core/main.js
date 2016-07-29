@@ -16,6 +16,7 @@ require(
         'core/routeResolver',
         'services/AuthService',
         'services/ModalService',
+        'services/SettingService',
         'controllers/NavbarController',
         'directives/textInputDirective'
     ],

@@ -4,10 +4,103 @@
 	</div>
 
 	<div class="row">
-		<div class="col-md-5">
-	  		Make some changes.		    
+		<div class="col-md-8">
+			<form name="form" class="form-horizontal" novalidate ng-submit="updateSettings()">
+				<input type="hidden" name="{{data.FB_ENABLED.setting_id}}" ng-model="data.FB_ENABLED.setting_value">
+			 	<input type="hidden" name="{{data.EMAIL_ENABLED.setting_id}}" ng-model="data.EMAIL_ENABLED.setting_value">
+			 	<input type="hidden" name="{{data.EMAIL_SECURE.setting_id}}" ng-model="data.EMAIL_SECURE.setting_value" ng-if="data.EMAIL_ENABLED.setting_value">
+				
+			  	<div><h4>Facebook Setup</h4></div>
+			  	<div class="form-group">
+			    	<label class="col-sm-4 control-label">Enable Facebook Login</label>
+			    	<div class="btn-group col-sm-5">
+				        <label class="btn btn-primary" ng-model="data.FB_ENABLED.setting_value" uib-btn-radio="true">Yes</label>
+				        <label class="btn btn-primary" ng-model="data.FB_ENABLED.setting_value" uib-btn-radio="false">No</label>
+				    </div>
+			 	</div>
+		
+			 	<ms-text-input type="text"
+								ms-id="{{data.FB_APP_ID.setting_id}}"
+								ms-name="{{data.FB_APP_ID.setting_id}}"
+								ms-required="{{ data.FB_ENABLED.setting_value ? 'required' : '' }}"
+								placeholder="Facebook App Id"
+								label="{{ data.FB_APP_ID.setting_desc }}"
+								label-length="4"
+								input-length="5"
+								ng-maxlength="20"
+								ng-minlength="1"
+								ng-model="data.FB_APP_ID.setting_value"
+								ng-if="data.FB_ENABLED.setting_value">
+				</ms-text-input>
+
+				<div><h4>System Email Setup</h4></div>
+			 	<div class="form-group">
+			    	<label class="col-sm-4 control-label">Enable System Email</label>
+			    	<div class="btn-group col-sm-5">
+				        <label class="btn btn-primary" ng-model="data.EMAIL_ENABLED.setting_value" uib-btn-radio="true">Yes</label>
+				        <label class="btn btn-primary" ng-model="data.EMAIL_ENABLED.setting_value" uib-btn-radio="false">No</label>
+				    </div>
+			 	</div>
+			 	<ms-text-input  type="text"
+								ms-id="{{data.EMAIL_HOST.setting_id}}"
+								ms-name="{{data.EMAIL_HOST.setting_id}}"
+								ms-required="{{ data.EMAIL_ENABLED.setting_value ? 'required' : '' }}"
+								placeholder="System Email Host"
+								label="{{ data.EMAIL_HOST.setting_desc }}"
+								label-length="4"
+								input-length="5"
+								ng-model="data.EMAIL_HOST.setting_value"
+								ng-if="data.EMAIL_ENABLED.setting_value">
+				</ms-text-input>
+				<ms-text-input  type="text"
+								ms-id="{{data.EMAIL_PORT.setting_id}}"
+								ms-name="{{data.EMAIL_PORT.setting_id}}"
+								ms-required="{{ data.EMAIL_ENABLED.setting_value ? 'required' : '' }}"
+								placeholder="System Email Port"
+								label="{{ data.EMAIL_PORT.setting_desc }}"
+								label-length="4"
+								input-length="5"
+								ng-model="data.EMAIL_PORT.setting_value"
+								ng-if="data.EMAIL_ENABLED.setting_value">
+				</ms-text-input>
+				<div class="form-group" ng-if="data.EMAIL_ENABLED.setting_value">
+			    	<label class="col-sm-4 control-label">System Email Secure Mode</label>
+			    	<div class="btn-group col-sm-5">
+				        <label class="btn btn-primary" ng-model="data.EMAIL_SECURE.setting_value" uib-btn-radio="true">Yes</label>
+				        <label class="btn btn-primary" ng-model="data.EMAIL_SECURE.setting_value" uib-btn-radio="false">No</label>
+				    </div>
+			 	</div>
+			 	<ms-text-input  type="email"
+								ms-id="{{data.EMAIL_ADDRESS.setting_id}}"
+								ms-name="{{data.EMAIL_ADDRESS.setting_id}}"
+								ms-required="{{ data.EMAIL_ENABLED.setting_value ? 'required' : '' }}"
+								placeholder="System Email Address"
+								label="{{ data.EMAIL_ADDRESS.setting_desc }}"
+								label-length="4"
+								input-length="5"
+								ng-model="data.EMAIL_ADDRESS.setting_value"
+								ng-if="data.EMAIL_ENABLED.setting_value">
+				</ms-text-input>
+				<ms-text-input  type="password"
+								ms-id="{{data.EMAIL_PASSWORD.setting_id}}"
+								ms-name="{{data.EMAIL_PASSWORD.setting_id}}"
+								ms-required="{{ data.EMAIL_ENABLED.setting_value ? 'required' : '' }}"
+								placeholder="System Email Password"
+								label="{{ data.EMAIL_PASSWORD.setting_desc }}"
+								label-length="4"
+								input-length="5"
+								ng-maxlength="20"
+								ng-minlength="1"
+								ng-model="data.EMAIL_PASSWORD.setting_value"
+								ng-if="data.EMAIL_ENABLED.setting_value">
+				</ms-text-input>
+				<div class="pull-right">
+					<button type="submit" class="btn btn-primary">Submit</button>
+					<button type="button" class="btn btn-warning" ng-click="resetForm()">Cancel</button>
+				</div>
+			</form>
 		</div>
-		<div class="col-md-7"></div>
+		<div class="col-md-4"></div>
 	</div>
 </div>
 		

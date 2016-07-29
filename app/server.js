@@ -25,9 +25,8 @@ var mailer = require('nodemailer');
 
 var db = require('./dbAccess');
 var auth = require('./modules/auth');
-// var student = require('./modules/student');
-
-var devMode = true;
+var setting = require('./modules/setting');
+var email = require('./modules/email');
 
 db.initialise();
 
@@ -59,14 +58,11 @@ app.use(bodyParser.json());
 
 app.use("/scripts", express.static(__dirname + '/scripts'));
 app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
+app.use("/lib", express.static(__dirname + '/lib'));
 // app.use("/views", express.static(__dirname + '/views'));
 app.use("/app", express.static(__dirname + '/app'));
 
 app.use("/image", express.static(__dirname + '/app/image'));
-
-if(devMode) {
-	app.use("/test", express.static(__dirname + '/test'));
-}
 
 // Request Handling
 
@@ -90,14 +86,13 @@ app.post('/register', function (req, res, next) {
 app.post('/forgotpassword', auth.forgotPassword);
 app.post('/resetpassword', auth.resetPassword);
 
-// app.post('/students/:func', function (req, res, next) {
-// 	var func = req.params.func;
-
-// 	if(!func || student[func] == undefined) 
-// 		res.status(404).send('Function Not Found');
-// 	else
-// 		student[func](req, res);
-// });
+app.post('/setting/:func', function (req, res) {
+	if(typeof setting[req.params.func] === "function") {
+		setting[req.params.func](req, res);
+	} else {
+		res.status(404).send("Function Not Found.");
+	}
+});
 
 app.get('/', function (req, res, next) {
 	var isLoggedIn = (req.session.user_id !== undefined);
@@ -112,15 +107,6 @@ app.get('/', function (req, res, next) {
 	};
 
 	res.render(__dirname + '/index.html', renderObj);
-});
-
-app.get('/testing', function (req, res, next) {
-	if(devMode) {
-		res.render(__dirname + '/test.html');
-	} else {
-		res.redirect('/#404');
-		res.end();
-	}
 });
 
 app.get('*', function (req, res, next) {

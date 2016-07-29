@@ -60,7 +60,7 @@
 				<h4>Login with Social Media</h4>
 			</div>
 			<div class="row">
-				<div>
+				<div ng-if="isFbEnabled">
 					<button class="btn btn-link" ng-click="facebookLogin()">
 						<img src="/app/image/facebook-logo.png" height="140" width="140" class="img-thumbnail"></img>	
 					</button>

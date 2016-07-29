@@ -4,8 +4,9 @@ var auth = this;
 
 // Dependencies
 var db = require('../dbAccess');
+var email = require('./email');
 var crypto = require('crypto');
-var nodemailer = require('nodemailer');
+// var nodemailer = require('nodemailer');
 
 var secret = "fjsljfDsffERW1231597RoiuvoDFA2";
 
@@ -423,7 +424,7 @@ function sendRegisterSuccessfulEmail(user) {
 
 	var title = "Congrats! New Account on Meansilo";
 
-	sendEmail(user.username, title, message);
+	email.sendEmail(user.username, title, message);
 }
 
 function sendResetPasswordEmail(username, encryptedId, token, baseUrl) {
@@ -434,41 +435,41 @@ function sendResetPasswordEmail(username, encryptedId, token, baseUrl) {
 
 	var title = "Reset Password on Meansilo";
 
-	sendEmail(username, title, message);
+	email.sendEmail(username, title, message);
 }
 
-function sendEmail (email, title, message) {
-	var smtpConfig = {
-	    host: 'smtp.gmail.com',
-	    port: 465,
-	    secure: true, // use SSL
-	    auth: {
-	        user: '',
-	        pass: ''
-	    }
-	};
+// function sendEmail (email, title, message) {
+// 	var smtpConfig = {
+// 	    host: 'smtp.gmail.com',
+// 	    port: 465,
+// 	    secure: true, // use SSL
+// 	    auth: {
+// 	        user: '',
+// 	        pass: ''
+// 	    }
+// 	};
 
-	// create reusable transporter object using the default SMTP transport
-	var transporter = nodemailer.createTransport(smtpConfig);
+// 	// create reusable transporter object using the default SMTP transport
+// 	var transporter = nodemailer.createTransport(smtpConfig);
 
-	// setup e-mail data with unicode symbols
-	var mailOptions = {
-	    from: '"Meansilo Testing" <foo@blurdybloop.com>', // sender address
-	    to: email, // list of receivers
-	    subject: title, // Subject line
-	    text: 'Hello world 🐴', // plaintext body
-	    html: message // html body
-	};
+// 	// setup e-mail data with unicode symbols
+// 	var mailOptions = {
+// 	    from: '"Meansilo Testing" <foo@blurdybloop.com>', // sender address
+// 	    to: email, // list of receivers
+// 	    subject: title, // Subject line
+// 	    text: 'Hello world 🐴', // plaintext body
+// 	    html: message // html body
+// 	};
 
-	// send mail with defined transport object
-	transporter.sendMail(mailOptions, function(error, info){
-	    if(error){
-	        return console.log(error);
-	    } else {
-	    	console.log('Message sent: ' + info.response);
-	    }
-	});
-}
+// 	// send mail with defined transport object
+// 	transporter.sendMail(mailOptions, function(error, info){
+// 	    if(error){
+// 	        return console.log(error);
+// 	    } else {
+// 	    	console.log('Message sent: ' + info.response);
+// 	    }
+// 	});
+// }
 
 function generateUserId(count, userLevel, callback) {
     var str = '';
