@@ -4,21 +4,21 @@ define(['core/app'], function (app) {
 
     //This controller retrieves data from the customersService and associates it with the $scope
     //The $scope is ultimately bound to the customers view due to convention followed by the routeResolver
-    var injectParams = ['$scope', '$routeParams', '$http', '$location', 'AuthService', 'ModalService'];
+    var injectParams = ['$scope', '$stateParams', '$http', '$location', 'AuthService', 'ModalService'];
 
-    var ResetPasswordController = function ($scope, $routeParams, $http, $location, AuthService, ModalService) {
+    var ResetPasswordController = function ($scope, $stateParams, $http, $location, AuthService, ModalService) {
     	$scope.result = {
     		success: false
     	}
-
+        
     	$scope.resetPassword = function () {
     		$scope.resetPasswordForm['password'].$setDirty();
     		$scope.resetPasswordForm['confirm_password'].$setDirty();
 
     		if($scope.resetPasswordForm.$valid) {
     			var params = {};
-    			params.user = $routeParams.user;
-    			params.token = $routeParams.token;
+    			params.user = $stateParams.user;
+    			params.token = $stateParams.token;
     			params.password = $scope.password;
 
     			$http.post('/resetpassword' , params).success(function (response){

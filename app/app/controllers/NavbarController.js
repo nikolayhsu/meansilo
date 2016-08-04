@@ -11,11 +11,11 @@ define(['core/app'], function (app) {
 
         var retrieveImage;
 
-        $rootScope.$on("$routeChangeSuccess", function (event, next, current) {
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams, options) {
             var path = [];
 
-            if(next.$$route && next.$$route.originalPath)
-                var path = next.$$route.originalPath.split('/');
+            if(toState && toState.url)
+                var path = toState.url.split('/');
             
             if(path.length >= 2) {
             	if(path[1] == '')

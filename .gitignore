@@ -1,3 +1,4 @@
 /node_modules/*
 /app/app/image/students/
 /app/app/image/favicon.ico
+/ssh-agent.exe.stackdump

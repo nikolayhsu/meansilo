@@ -7,15 +7,16 @@ define(['core/routeResolver'], function () {
         'ngAnimate', 
         'ngTouch', 
         'ui.bootstrap',
-        'ngTable'
+        'ngTable',
+        'ui.router'
     ];
 
     var app = angular.module('meansiloApp', dependencies);
 
     app.config(['$routeProvider', 'routeResolverProvider', '$controllerProvider', '$locationProvider',
-                '$compileProvider', '$filterProvider', '$provide',
+                '$compileProvider', '$filterProvider', '$provide', '$stateProvider', '$urlRouterProvider',
         function ($routeProvider, routeResolverProvider, $controllerProvider, $locationProvider,
-                  $compileProvider, $filterProvider, $provide) {
+                  $compileProvider, $filterProvider, $provide, $stateProvider, $urlRouterProvider) {
 
             //Change default views and controllers directory using the following:
             //routeResolverProvider.routeConfig.setBaseDirectories('/app/views', '/app/controllers');
@@ -34,19 +35,40 @@ define(['core/routeResolver'], function () {
             //Define routes - controllers will be loaded dynamically
             var route = routeResolverProvider.route;
 
-            $routeProvider
-                .when('/', { redirectTo: '/home' })
-                .when('/home', route.resolve('Home'))
-                .when('/about', route.resolve('About'))
-                .when('/contact', route.resolve('Contact'))
-                .when('/login', route.resolve('Login'))
-                .when('/login/register', route.resolve('Register'))
-                .when('/resetpassword/:user/:token', route.resolve('ResetPassword'))
-                .when('/admin', route.resolve('Admin', 'admin/', true))
-                .when('/users', route.resolve('Users', 'admin/', true))
-                .when('/403', route.resolve('403'))
-                .when('/404', route.resolve('404'))
-                .otherwise({ redirectTo: '/404' });
+            // For any unmatched url, redirect to /state1
+            $urlRouterProvider.otherwise("/404");
+
+            $stateProvider
+                .state('main', {
+                    url: '',
+                    onEnter: function($state) {
+                        $state.go('home');
+                    }
+                })
+                .state('home', route.resolve('/home', 'Home'))
+                .state('about', route.resolve('/about', 'About'))
+                .state('contact', route.resolve('/contact', 'Contact'))
+                .state('login', route.resolve('/login','Login'))
+                .state('register', route.resolve('/login/register', 'Register'))
+                .state('resetpassword', route.resolve('/resetpassword/:user/:token','ResetPassword'))
+                .state('admin', route.resolve('/admin', 'Admin', 'admin/', true))
+                .state('users', route.resolve('/users', 'Users', 'admin/', true))
+                .state('403', route.resolve('/403', '403'))
+                .state('404', route.resolve('/404', '404'));
+
+            // $routeProvider
+            //     .when('/', { redirectTo: '/home' })
+            //     .when('/home', route.resolve('Home'))
+            //     .when('/about', route.resolve('About'))
+            //     .when('/contact', route.resolve('Contact'))
+            //     .when('/login', route.resolve('Login'))
+            //     .when('/login/register', route.resolve('Register'))
+            //     .when('/resetpassword/:user/:token', route.resolve('ResetPassword'))
+            //     .when('/admin', route.resolve('Admin', 'admin/', true))
+            //     .when('/users', route.resolve('Users', 'admin/', true))
+            //     .when('/403', route.resolve('403'))
+            //     .when('/404', route.resolve('404'));
+                //.otherwise({ redirectTo: '/404' });
 
     }]);
 
@@ -56,12 +78,12 @@ define(['core/routeResolver'], function () {
             //own security as well since client-based security is easily hacked
             $rootScope.isFbInitialised = false;                
 
-            $rootScope.$on("$routeChangeError", function (event, next, current) {
+            $rootScope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, options) {
                 $location.path('/');
             });
 
-            $rootScope.$on("$routeChangeStart", function (event, next, current) {
-                if (next && next.$$route && next.$$route.secure) {
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams, options) {
+                if (toState && toState.secure) {
                     AuthService.getLoginStatus(function (user) {
                         if(!user.logedin) {
                             AuthService.redirectToLogin();

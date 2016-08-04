@@ -34,10 +34,11 @@ define([], function () {
 
         this.route = function (routeConfig) {
 
-            var resolve = function (baseName, path, secure) {
+            var resolve = function (url, baseName, path, secure) {
                 if (!path) path = '';
 
                 var routeDef = {};
+                routeDef.url = url;
                 routeDef.templateUrl = routeConfig.getViewsDirectory() + path + baseName + '.html';
                 
                 routeDef.controller = '';
@@ -52,7 +53,6 @@ define([], function () {
                         return resolveDependencies($q, $rootScope, dependencies);
                     }]
                 };
-
                 return routeDef;
             },
 
