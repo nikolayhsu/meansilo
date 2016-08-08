@@ -1,13 +1,12 @@
 # meansilo
 Mean Silo. Basic MEAN app framework with Admin (and login).
 
-Its very basic, no user management.
+It's very basic, no user management.
 
 Install the project
 
-    git clone https://github.com/buzzcloudau/meansilo.git
+    git clone https://github.com/nikolayhsu/meansilo.git
     cd meansilo && npm install
-
 
 Start 'er up
 
@@ -21,15 +20,27 @@ You can find all the config settings under ( This should serve all your app.get(
 
 To enable Nodemailer
 
-    Go to /app/modules/auth.js
+    Login as admin
 
-    Set up your email address and password in line 445 & 446
+    Click on Admin in the top menu
+
+    Set 'Enable System Email' to Yes 
+
+    Set up your email host, port, secure mode, email address and password.
+
+    Click Submit to save the setting
 
 To enable Facebook Login
 
-    Go to /app/app/app.js
+    Login as admin
 
-    Set up your Facebook application ID in line 64
+    Click on Admin in the top menu
+
+    Set 'Enable Facebook Login' to Yes 
+
+    Set up your Facebook application ID
+
+    Click Submit to save the setting
 
 
 The "admin" user is created if it doesn't exist. Set the details in:
