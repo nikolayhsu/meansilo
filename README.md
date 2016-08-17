@@ -10,7 +10,11 @@ Install the project
 
 Start 'er up
 
-    sudo ./run.sh
+    UNIX 
+        sudo ./run.sh
+
+    WINDOWS
+        run.sh
     
 
 You can find all the config settings under ( This should serve all your app.get() requests automatically )
@@ -45,7 +49,7 @@ To enable Facebook Login
 
 The "admin" user is created if it doesn't exist. Set the details in:
 
-    # /app/server.js
+    # /app/dbAccess.js
     ...
     var adminUsername = "admin";
     var adminPassword = "password";
